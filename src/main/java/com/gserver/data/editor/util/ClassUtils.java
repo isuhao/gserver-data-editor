@@ -8,6 +8,7 @@ import org.springframework.core.io.support.PathMatchingResourcePatternResolver;
 import org.springframework.core.io.support.ResourcePatternResolver;
 
 import com.google.common.collect.Sets;
+import com.gserver.data.editor.annotation.Comment;
 
 public class ClassUtils {
 
@@ -98,12 +99,16 @@ public class ClassUtils {
 		return children;
 	}
 
-	public static Class<?> findPackageInfo(String packageName) {
+	public static String findPackageInfo(String packageName) {
+		String packageDesc = packageName.substring(packageName.lastIndexOf('.') + 1);
 		try {
 			Class<?> clazz = Class.forName(packageName + ".package-info");
-			return clazz;
+			if (clazz != null && clazz.isAnnotationPresent(Comment.class)) {
+				packageDesc = clazz.getAnnotation(Comment.class).desc();
+			}
+			return packageDesc;
 		} catch (ClassNotFoundException e) {
+			return packageDesc;
 		}
-		return null;
 	}
 }

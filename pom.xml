@@ -217,12 +217,6 @@
 			<version>${log4jdbc.version}</version>
 		</dependency>
 
-		<dependency>
-			<groupId>org.apache.ant</groupId>
-			<artifactId>ant</artifactId>
-			<version>1.9.2</version>
-		</dependency>
-
 	</dependencies>
 
 	<build>

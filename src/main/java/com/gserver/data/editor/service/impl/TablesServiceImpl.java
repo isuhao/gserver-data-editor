@@ -197,7 +197,8 @@ public class TablesServiceImpl implements TablesService {
 	public List<Tree> getTreeLayer(String packageName) {
 		List<Tree> list = Lists.newArrayList();
 		if (packageName == null) {
-			Tree tree = new Tree(EntityUtils.PACKAGE, "编辑器", "closed");
+			String packageDesc = ClassUtils.findPackageInfo(EntityUtils.PACKAGE);
+			Tree tree = new Tree(EntityUtils.PACKAGE, packageDesc, "closed");
 			list.add(tree);
 			return list;
 		}
@@ -207,27 +208,20 @@ public class TablesServiceImpl implements TablesService {
 			for (String f : names) {
 				if (f.endsWith(".class")) { // Class
 					String className = f.substring(0, f.indexOf(".class"));
-					Class<?> c = null;
-					try {
-						c = Thread.currentThread().getContextClassLoader().loadClass(className);
-						if (!c.isInterface() && TableEntity.class.isAssignableFrom(c)) {
-							String tableName = c.getAnnotation(Table.class).name();
-							String tableDesc = c.isAnnotationPresent(Comment.class) ? c.getAnnotation(Comment.class).desc() : c.getSimpleName();
-							list.add(new Tree(tableName, tableDesc, "open"));
-						}
-					} catch (ClassNotFoundException e) {
-						e.printStackTrace();
+					Class<?> c = Thread.currentThread().getContextClassLoader().loadClass(className);
+					if (!c.isInterface() && TableEntity.class.isAssignableFrom(c)) {
+						String tableName = c.getAnnotation(Table.class).name();
+						String tableDesc = c.isAnnotationPresent(Comment.class) ? c.getAnnotation(Comment.class).desc() : c.getSimpleName();
+						list.add(new Tree(tableName, tableDesc, "open"));
 					}
 				} else { // Package
-					String packageDesc = f.substring(0, f.lastIndexOf('.'));
-					Class<?> c = ClassUtils.findPackageInfo(f);
-					if (c != null && c.isAnnotationPresent(Comment.class)) {
-						packageDesc = c.getAnnotation(Comment.class).desc();
-					}
+					String packageDesc = ClassUtils.findPackageInfo(f);
 					list.add(new Tree(f, packageDesc, "closed"));
 				}
 			}
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
 		return list;

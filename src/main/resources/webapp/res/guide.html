@@ -1,0 +1,347 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+	<head>
+		<title>帮助</title>
+		<meta http-equiv="keywords" content="keyword1,keyword2,keyword3">
+		<meta http-equiv="description" content="this is my page">
+		<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('#guideDiv').scroll(function() {
+					$("#catalog-0").animate({
+						top : 80
+						}, {
+					duration : 500,
+					queue : false
+					});
+				});
+			});
+		</script>
+	</head>
+	<body onload="">
+		<div id="catalog-0" style="padding:0 20px;background:#FBFBFB;border:1px solid #ccc;position:absolute;right:30px;top:80px" >
+			<h2> 目 录 </h2>
+			<dl id="catalog-holder-0">
+				<dd><p><span>1</span><a href="#1">功能描述</a></p></dd>
+				<dd><p><span>2</span><a href="#2">表的建立</a></p></dd>
+				<dd><p><span>3</span><a href="#3">基本增删改查</a></p></dd>
+				<dd><p><span>4</span><a href="#4">一般数组</a></p></dd>
+				<dd><p><span>5</span><a href="#5">限定数组</a></p></dd>
+				<dd><p><span>6</span><a href="#6">关联</a></p></dd>
+				<dd><p><span>7</span><a href="#7">关联在数组中的使用</a></p></dd>
+				<dd><p><span>8</span><a href="#8">解、锁表</a></p></dd>
+				<dd><p><span>9</span><a href="#9">导出表</a></p></dd>
+			</dl>
+		</div>
+		<div style="padding: 10px">
+			 <h3><a id="1">功能描述 </a></h3>
+			<ol>
+				<li>
+					<p>可逐行编辑一般数据，支持整数、浮点数、字符串。</p>
+				</li>
+				<li>
+					<p>
+						可通过配置，实现特殊字段数组框弹出编辑。
+						<br />
+						数组在库内以字符串形式存放，元素间以英文逗号“,”分隔（所以单个元素中不能出现英文逗号）。
+					</p>
+				</li>
+				<li>
+					<p>可通过配置，实现特殊字段的表间关联选择（并可和功能2兼容）。</p>
+				</li>
+				<li>
+					<p>
+						在用户编辑一个表时，可将此表进行锁定、解锁。
+						<br />
+						若某个表被锁定，别的ip用户在此后30分钟内不能修改这个表的内容。
+				</li>
+				<li>
+					<p>可将某个表的内容导出.txt文件下载。</p>
+				</li>
+			</ol>
+
+			<h3> 配置使用方法 </h3>
+			<h4><a id="2">表的建立</a></h4>
+			<p>每个数据表需要建立一个VO类 。</p>
+			<p>
+				数据类型为整数、浮点数和字符串。目前此编辑器不支持编辑
+				<code>Boolean</code>、
+				<code>Char</code>、
+				<code>Date</code>、
+				<code>BigInteger</code>、
+				<code>BigDecimal</code>
+				等类型。如有需求请以被支持的数字类型或字符串代替。
+			</p>
+			<p>字符串加<code>@ArrayData</code>将此字段注解为数组。</p>
+			<p>如不出错，重启服务器后，会在数据库中自动建表。若建表不成功，检查字段的命名是否使用了SQL关键字。</p>
+			<p>例如：</p>
+			<textarea name="code" class="html">
+			package com.gserver.data.editor.entity; 				// 必须在这个包内，可建子包，左侧树形结构与子包对应
+			
+			import javax.persistence.Column;
+			import javax.persistence.Entity;
+			import javax.persistence.GeneratedValue;
+			import javax.persistence.GenerationType;
+			import javax.persistence.Id;
+			import javax.persistence.Table;
+			
+			import com.gserver.data.editor.TableEntity;
+			import com.gserver.data.editor.annotation.ArrayData;
+			import com.gserver.data.editor.annotation.Comment;
+			
+			@Entity
+			@Comment(desc = "天赋表")								// 表的中文描述
+			@Table(name = "talent")								  // 表的在数据库中的名称，数据表不要以"_tt_"前缀
+			public class Talent implements TableEntity {
+				@Id
+				@Comment(search = "search_EQ_code", desc = "id")	 // search表示搜索条件，格式为"search_条件_VO类字段名"，desc为列的中文描述
+				@Column(name = "code")	// 数据库中的字段名
+				@GeneratedValue(strategy = GenerationType.AUTO)
+				private Long code;
+			
+				@Comment(search = "search_LIKE_name", desc = "名称") // String型字段search条件为LIKE
+				@Column(name = "name", nullable = false)
+				private String name;
+			
+				@Comment(search = "search_EQ_pos", desc = "层数")	// 数字型字段search条件为EQ
+				@Column(name = "pos", nullable = false)
+				private int pos;
+			
+				@Comment(search = "search_EQ_type", desc = "类型")
+				@Column(name = "type", nullable = false)
+				private int type;
+			
+				@Comment(search = "search_EQ_csize", desc = "图片大小")	// ！注意search搜索条件是csize而不是Csize，严格对应VO类字段名，而非注解@Column中的name	
+				@Column(name = "Csize", nullable = false)
+				private int csize;
+			
+				@Comment(search = "search_EQ_cimage", desc = "图片编号")
+				@Column(name = "Cimage", nullable = false)
+				private int cimage;
+			
+				@Comment(search = "search_LIKE_lost", desc = "激活消耗")
+				@Column(name = "lost", nullable = false)
+				@ArrayData											// 表示这一列String会被解析为数组，在填数组时，每个元素中不能出现英文逗号“,”
+				private String lost;
+			
+				@Comment(search = "search_LIKE_value", desc = "参数")
+				@Column(name = "value", nullable = false)
+				@ArrayData
+				private String value;
+			
+				@Comment(search = "search_EQ_level", desc = "等级")
+				@Column(name = "level", nullable = false)
+				private String level;
+			
+				@Comment(search = "search_EQ_pre", desc = "前置节点")
+				@Column(name = "pre", nullable = false)
+				private String pre;
+			
+				public Talent() {
+					super();
+				}
+			
+				public Talent(Long code, String name, int pos, int type, int csize, int cimage, String lost, String value,
+						String level, String pre) {
+					super();
+					this.code = code;
+					this.name = name;
+					this.pos = pos;
+					this.type = type;
+					this.csize = csize;
+					this.cimage = cimage;
+					this.lost = lost;
+					this.value = value;
+					this.level = level;
+					this.pre = pre;
+				}
+				
+				// getter、setter、hashCode、equals、toString方法。
+				...
+		}</textarea>
+			<h4><a id="3">基本增删改查</a></h4>
+			<p>数据表编辑界面如下图：</p>
+			<img src="./res/img/crud.png" />
+			<ul>
+				<li>
+					<p>双击单元格编辑一行，编辑之后，按保存将内容写入数据库。</p>
+				</li>
+				<li>
+					<p>点击“新增行”可以新建一行，填写完毕后，点保存将内容写入数据库，自增长ID之后会显示在这一行。</p>
+				</li>
+				<li>
+					<p>编辑一行之后，双击编辑另一行，前一行内容自动保存。</p>
+				</li>
+				<li>
+					<p>某一行在编辑状态下，可以撤销未保存的内容。</p>
+				</li>
+				<li>
+					<p>右上搜索框可以输入一个列的关键词搜索，数字型的列为严格匹配，字符串（数组）为包含匹配。之后进行翻页操作，显示的均为符合关键词的内容。</p>
+				</li>
+			</ul>
+			<h4> 数组与关联 </h4>
+			<h5><a id="4">一般数组</a></h5>
+			<p>VO类中，<code>@ArrayData String</code>型的数据在编辑时将弹出数组编辑器。</p>
+			<textarea name="code" class="html">
+			@Comment(search = "search_LIKE_value", desc = "参数")
+			@Column(name = "value", nullable = true)
+			@ArrayData
+			private String value;</textarea>
+			<img src="./res/img/plain_array.png" />
+			<ul>
+				<li>
+					<p>双击编辑已存在的单元格，这些单元格写的内容格式为字符串。</p>
+				</li>
+				<li>
+					<p>“新增行”和“删除行”添加或删除一行单元格。</p>
+				</li>
+				<li>
+					<p>
+						“输入预览”将当前数组编辑器输入内容转成的字符串显示出来。
+						<br />
+						注：转成字符串的规则：所有行从上到下，同行从左到右，用英文逗号连接每个单元格当前输入内容。
+					</p>
+				</li>
+				<li>
+					<p>“确定”将这个字符串写到父层单元格内。</p>
+				</li>
+				<li>
+					<p>“还原”将数组编辑器内容重置，同时还原父层单元格的内容。</p>
+				</li>
+			</ul>
+			<h5><a id="5">限定数组</a></h5>
+			<p>若一个数据字段为数组，可以在“数组限定”表对数组编辑器表头进行配置。</p>
+			<p>数组限定是指，在同一个数据表内，某个字段A的值控制另一列T的数组表头列数。列T的内容相当于二维数组。</p>
+			<p>如：“类型字段”的值控制“参数”字段弹出数组编辑器的表头。</p>
+			<img src="./res/img/array_type2.png" />
+			<img src="./res/img/array_type3.png" />
+			<p>
+				“天赋表”<code>talent</code>的“参数<code>value</code>”列受字段“类型<code>type</code>”的值控制，配置步骤如下：
+			</p>
+			<ol>
+				<li>
+					<p>新增若干条数据，选定“表名称”、“控制列”和“被控制列”。</p>
+				</li>
+				<li>
+					<p>
+						配置当控制列为某个值时的若干条数据；
+						<br />
+						这几条数据的“控制列可能值”写相同的值，元素下标顺序从小到大，表示数组编辑器表头中的列排序，元素描述为数组编辑器表头的文字；
+						<br />
+					</p>
+				</li>
+				<li>
+					<p>
+						“关联约束记录id”表示这个数组列是否是弹出“关联”编辑器。
+						<br />
+						若需要配成是关联，则需要在“关联”配置表中设一条关联方式，然后配成那条数据的自增长<code>code</code>；
+						<br />
+						否则设为缺省值，表示数组这个位置内容为手填。
+					</p>
+					<p>到此，我们已经配好了当“类型<code>type</code>”写<code>1</code>，时的数组编辑弹出。</p>
+					<img src="./res/img/set_array1.png" />
+				</li>
+				<li>
+					<p>
+						配置“类型<code>type</code>”的其他值，完成整组配置。
+						<br />
+						这时再编辑<code>talent</code>表时，当“类型<code>type</code>”写<code>1</code>或<code>2</code>或<code>3</code>时，数组编辑器弹出不同的表头。
+						<br />
+					</p>
+					<img src="./res/img/set_array2.png" />
+				</li>
+			</ol>
+			<p>注：</p>
+			<ol>
+				<li>
+					<p>配置好后，编辑数据时，先编辑控制字段，再编辑数组。</p>
+				</li>
+				<li>
+					<p>若控制字段填写了未配的值，则被控制列被当成普通数组处理。</p>
+				</li>
+			</ol>
+			<h5><a id="6">关联</a></h5>
+			<p>设置关联，可以将某个表的一列和另一个表联系起来，在填写这一列时，可以弹出选行界面，方便地选择另外一个表的行（注意二者数据类型），将那一行的id写到单元格内。关联也适用于数组编辑器。</p>
+			<img src="./res/img/select_foreign.png" />
+			<p>上图为一个简单的关联，编辑任务表的“前置任务（<code>pre</code>字段）”和“后续任务（<code>next</code>字段）”时弹出窗口，选择一行数据，“设为此行关联值”将内容所选行的<code>code</code>写入父层单元格。</p>
+			<ol>
+				<li>
+					<p>打开关联表，配置一行数据。</p>
+				</li>
+				<li>
+					<p>第二列选择被编辑表的名称，第二列选定后，在第三列选择这个表哪个字段要被设为关联。</p>
+				</li>
+				<li>
+					<p>第四列选择弹出表的名称，第四列选定后，在第五列选择id字段，即<code>code</code>。</p>
+				</li>
+				<li>
+					<p>顺序索引一列不写（保留用途）。</p>
+				</li>
+				<li>
+					<p>保存。</p>
+				</li>
+			</ol>
+			<img src="./res/img/set_foreign.png" />
+			<p>注：</p>
+			<ol>
+				<li>
+					<p>
+						在非数组的情况下，配置的第三列和第五列应该为同样的数据类型，<code>pre</code>和<code>next</code>的类型在定表的时候都是	<code>Long</code>型，和弹出表的关联字段<code>	code</code>类型相同，这样才能保证数据正确存入。
+						<br />
+						若第三列的字段是数组，则无此类型要求（见下一节）。
+					</p>
+				</li>
+				<li>
+					<p>配置之后，若一行数据的这个关联字段应设为缺省，点击“设为缺省值”，当父层单元格字段是字符串（表示数组）时，缺省值为空<code>""</code>；当为所支持的数字类型时，缺省值为<code>-1</code>。</p>
+				</li>
+				<li>
+					<p>存在关联时，试图删除一条数据，程序会判断这条数据是否被引用，若有则提示不能删除。此时需要查看哪条数据引用它，将其关联到别的行，这条数据方可删除。</p>
+				</li>
+			</ol>
+			<h5><a id="7">关联在数组中的使用</a></h5>
+			<p>数组编辑器也能弹出关联选择窗口，需要在“数组限定”配置表中额外配置“关联约束记录id”。</p>
+			<p>
+				假设需要实现：当“天赋表”的“类型<code>type</code>”为4时，“参数<code>value</code>”数组有三列，后两列为对“任务表”的关联，
+				<br />
+				配置步骤如下：
+			</p>
+			<ol>
+				<li>
+					<p>“关联表”中新增一条数据如下，得到这条关联的id为<code>5</code>。</p>
+					<img src="./res/img/array_with_foreign1.png" />
+				</li>
+				<li>
+					<p>“数组限定”中新增三条数据如下，表示数组的三列，由于第二、三列为关联，将“关联约束记录id”设成上一步的<code>5</code>，完成。</p>
+					<img src="./res/img/array_with_foreign2.png" />
+				</li>
+			</ol>
+			<h4><a id="8">锁表</a></h4>
+			<p>
+				锁表的目的是为了放在多个策划同时改一个表，导致数据逻辑错误。
+				<br />
+				锁表之后，只有锁表者的ip可以编辑这个表，其他ip只能查看。锁表默认为30分钟自动解锁。
+			</p>
+			<h4><a id="9">导出</a></h4>
+			<p>导出当前表的数据为.txt文件供下载。</p>
+			<p>左侧菜单，提供右键导出，支持文件夹、以及单个文件导出。</p>
+		</div>
+		<script type="text/javascript">
+			$(document).ready(function() {
+				$('textarea[name="code"]').each(function() {
+					var data = $(this).val();
+					data = data.replace(/(\r\n|\r|\n)/g, '\n');
+					if (data.indexOf('\t') == 0) {
+						data = data.replace(/^\t/, '');
+						data = data.replace(/\n\t/g, '\n');
+					}
+					data = data.replace(/\t/g, '    ');
+					var pre = $('<pre name="code" class="prettyprint linenums"></pre>'
+						).insertAfter(this);
+						pre.text(data);
+						$(this).remove();
+						});
+						prettyPrint();
+			});
+		</script>
+	</body>
+</html>

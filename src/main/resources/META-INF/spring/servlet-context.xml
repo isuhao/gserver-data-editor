@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="
+        http://www.springframework.org/schema/beans 
+        http://www.springframework.org/schema/beans/spring-beans-3.2.xsd
+        http://www.springframework.org/schema/context 
+        http://www.springframework.org/schema/context/spring-context-3.2.xsd
+        http://www.springframework.org/schema/mvc    
+        http://www.springframework.org/schema/mvc/spring-mvc-3.2.xsd">
+
+	<bean
+		class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">
+		<property name="messageConverters">
+			<list>
+				<bean
+					class="org.springframework.http.converter.ByteArrayHttpMessageConverter" />
+				<bean
+					class="com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter">
+					<property name="supportedMediaTypes" value="application/json" />
+					<property name="features">
+						<list>
+							<value>WriteMapNullValue</value>
+							<value>QuoteFieldNames</value>
+						</list>
+					</property>
+				</bean>
+			</list>
+		</property>
+	</bean>
+
+
+	<mvc:resources location="/res/" mapping="/res/**" />
+	<mvc:resources location="/res/favicon.ico" mapping="/favicon.ico" />
+
+	<mvc:interceptors>
+		<bean class="com.gserver.data.editor.interceptor.LockTableInterceptor" />
+		<!-- 解决延迟加载 -->
+		<bean
+			class="org.springframework.orm.jpa.support.OpenEntityManagerInViewInterceptor">
+			<property name="entityManagerFactory">
+				<ref bean="entityManagerFactory" />
+			</property>
+		</bean>
+	</mvc:interceptors>
+
+	<bean
+		class="org.springframework.web.servlet.handler.SimpleMappingExceptionResolver">
+		<!-- 定义默认的异常处理页面，当该异常类型的注册时使用 -->
+		<property name="defaultErrorView" value="error"></property>
+		<!-- 定义异常处理页面用来获取异常信息的变量名，默认名为exception -->
+		<property name="exceptionAttribute" value="ex"></property>
+		<!-- 定义需要特殊处理的异常，用类名或完全路径名作为key，异常也页名作为值 -->
+		<property name="exceptionMappings">
+			<props>
+				<prop key="com.gserver.data.editor.exception.ParameterException">error-parameter</prop>
+			</props>
+		</property>
+		<!-- 相关状态码对应的错误页面 -->
+		<property name="statusCodes">
+			<props>
+				<prop key="500">500</prop>
+				<prop key="404">404</prop>
+			</props>
+		</property>
+		<!-- 设置日志输出级别，不定义则默认不输出警告等错误日志信息 -->
+		<property name="warnLogCategory" value="WARN" />
+		<!-- 默认HTTP状态码 -->
+		<property name="defaultStatusCode" value="500" />
+	</bean>
+</beans>

@@ -99,6 +99,11 @@ public class ClassUtils {
 		return children;
 	}
 
+	/**
+	 * 获得包注解信息
+	 * @param packageName
+	 * @return
+	 */
 	public static String findPackageInfo(String packageName) {
 		String packageDesc = packageName.substring(packageName.lastIndexOf('.') + 1);
 		try {

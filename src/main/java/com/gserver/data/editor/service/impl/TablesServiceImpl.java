@@ -18,8 +18,6 @@ import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
@@ -42,7 +40,6 @@ import com.gserver.data.editor.util.ReflectionUtils;
 import com.gserver.data.editor.util.SearchFilter;
 
 @Service("tablesService")
-@Transactional(propagation = Propagation.REQUIRED, readOnly = true)
 public class TablesServiceImpl implements TablesService {
 
 	@Autowired

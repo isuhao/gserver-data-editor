@@ -15,9 +15,10 @@ import org.hibernate.Session;
 import org.springframework.data.jpa.domain.Specification;
 
 import com.gserver.data.editor.TableEntity;
+import com.gserver.data.editor.dao.BaseDao;
 import com.gserver.data.editor.util.BaseQEntity;
 
-public class BaseDaoImpl{
+public class BaseDaoImpl implements BaseDao{
 
 	// @Autowired
 	// private SessionFactory sessionFactory;
@@ -38,10 +39,6 @@ public class BaseDaoImpl{
 
 	public <T> void update(T t) {
 		em.merge(t);
-	}
-
-	public <T> void delete(T t) {
-		em.remove(t);
 	}
 
 	public <T, I extends Serializable> T get(Class<T> clz, I id) {

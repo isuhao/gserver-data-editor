@@ -31,6 +31,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.ControllerAdvice;
 
 import com.codahale.metrics.MetricRegistry;
 import com.codahale.metrics.health.HealthCheckRegistry;
@@ -47,7 +48,7 @@ import com.codahale.metrics.health.HealthCheckRegistry;
 @Configuration
 @ImportResource( { "classpath:META-INF/spring/root-context.xml", "classpath:META-INF/spring/hibernateContext.xml" })
 @Import( { JettyConfiguration.class })
-@ComponentScan(basePackages = { "com.gserver.data.editor" }, excludeFilters = { @ComponentScan.Filter(Controller.class), @ComponentScan.Filter(Configuration.class) })
+@ComponentScan(basePackages = { "com.gserver.data.editor" }, excludeFilters = { @ComponentScan.Filter(ControllerAdvice.class),@ComponentScan.Filter(Controller.class), @ComponentScan.Filter(Configuration.class) })
 public class RootConfiguration {
 
 	/**

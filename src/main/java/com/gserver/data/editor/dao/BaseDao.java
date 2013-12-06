@@ -33,14 +33,6 @@ public interface BaseDao {
 	public <T> void update(T t);
 
 	/**
-	 * 删除持久态的对象。
-	 * 
-	 * @param <T>
-	 * @param t
-	 */
-	public <T> void delete(T t);
-
-	/**
 	 * 根据Id删除记录。
 	 * 
 	 * @param <T>

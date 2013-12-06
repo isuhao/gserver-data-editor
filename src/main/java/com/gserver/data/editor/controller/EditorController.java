@@ -51,6 +51,9 @@ public class EditorController {
 		return "index";
 	}
 
+	/**
+	 * 获取左侧树形目录结构
+	 */
 	@ResponseBody
 	@RequestMapping(value = "/getTree", method = { RequestMethod.GET, RequestMethod.POST })
 	public List<Tree> getTree(String id) {

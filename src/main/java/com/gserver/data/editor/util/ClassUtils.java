@@ -66,6 +66,13 @@ public class ClassUtils {
 		return classes;
 	}
 
+	/**
+	 * 获取包下直接子层的类名和包名，其中类名会有后缀{@code ".class"}。
+	 * 
+	 * @param packageName
+	 * @return
+	 * @throws IOException
+	 */
 	public static Set<String> getDirectChildrenNames(String packageName) throws IOException {
 		String packageNameSlashed = packageName.replace('.', '/');
 		Set<String> children = Sets.newTreeSet();

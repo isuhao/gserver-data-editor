@@ -4,6 +4,7 @@ import java.beans.PropertyEditorSupport;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -18,7 +19,7 @@ public class GlobalControllerAdvice {
 
 	@InitBinder
 	// 此处的参数也可以是ServletRequestDataBinder类型
-	public void initBinder(WebDataBinder binder) throws Exception {
+	public void initBinder(WebDataBinder binder, final HttpServletRequest request) throws Exception {
 		// 表示如果命令对象有TableEntity类型的属性，将使用该属性编辑器进行类型转换
 		binder.registerCustomEditor(TableEntity.class, new PropertyEditorSupport() {
 			@Override
@@ -28,16 +29,20 @@ public class GlobalControllerAdvice {
 
 			@Override
 			public void setAsText(String text) throws IllegalArgumentException {
+
 				Class<TableEntity> beanClass = EntityUtils.getMappedClass(text);
 				TableEntity newInstance = ReflectionUtils.getNewInstance(beanClass);
+				new ServletRequestDataBinder(newInstance).bind(request);
 				setValue(newInstance);
 			}
 		});
 	}
 
 	/** 基于@ExceptionHandler异常处理 */
-	
-	@ExceptionHandler// @ResponseBody(value = { BusinessException.class, ParameterException.class,
+
+	@ExceptionHandler
+	// @ResponseBody(value = { BusinessException.class,
+	// ParameterException.class,
 	// Exception.class})
 	public String exp(HttpServletRequest request, Exception ex) {
 

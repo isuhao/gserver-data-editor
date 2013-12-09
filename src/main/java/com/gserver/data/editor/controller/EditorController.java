@@ -17,7 +17,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -109,15 +108,12 @@ public class EditorController {
 	 * 
 	 * @param model
 	 * @param table
-	 * @param request
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/{table}/save", method = { RequestMethod.POST })
-	public Map<String, Object> saveRow(Model model, @PathVariable TableEntity table, HttpServletRequest request){
+	public Map<String, Object> saveRow(Model model, @PathVariable TableEntity table){
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(table);
-		binder.bind(request);
 		tablesService.insertData(table);
 		map.put("success", true);
 		map.put("code", table.getCode());
@@ -134,9 +130,7 @@ public class EditorController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/{table}/update", method = RequestMethod.POST)
-	public Map<String, Object> updateRow(Model model, @PathVariable TableEntity table, HttpServletRequest request) {
-		ServletRequestDataBinder binder = new ServletRequestDataBinder(table);
-		binder.bind(request);
+	public Map<String, Object> updateRow(Model model, @PathVariable TableEntity table) {
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
 		tablesService.updateData(table);
 		map.put("success", true);

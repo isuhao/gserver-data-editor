@@ -281,7 +281,7 @@
 							<Class-Path>.</Class-Path>
 						</manifestEntries>
 					</archive>
-					<finalName>server</finalName>
+					<finalName>${project.build.finalName}</finalName>
 					<outputDirectory>${project.build.directory}/../${project.artifactId}</outputDirectory>
 				</configuration>
 			</plugin>

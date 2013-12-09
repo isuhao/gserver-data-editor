@@ -2,7 +2,6 @@ package com.gserver.data.editor.util;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
@@ -13,10 +12,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConvertUtils;
-import org.apache.commons.beanutils.converters.DateConverter;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -66,43 +61,6 @@ public class EntityUtils {
 		} catch (ClassNotFoundException e) {
 			// This ClassNotFoundException should never been thrown either!
 			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * 供{@link #getTableEntity}方法使用。
-	 */
-	static {
-		DateConverter d = new DateConverter();
-		String[] datePattern = { "yyyy-mm-dd", "yyyy/mm/dd", "yyyy.mm.dd" };
-		d.setPatterns(datePattern);
-		ConvertUtils.register(d, java.util.Date.class);
-	}
-
-	/**
-	 * 根据表名和属性参数{@code Map}生成一个{@code TableEntity}实现类。
-	 * <p>
-	 * <em>警告</em>：如果传入参数{@code Map}因类型不匹配，不能被正确解析到{@code TableEntity}
-	 * 实现类同名字段时，此方法不会给这些字段赋值，而<em>不抛出异常</em>。
-	 * 
-	 * @param table
-	 *            表实例
-	 * @param paramMap
-	 *            参数映射。
-	 * @return 已赋值（但可能不完全）的{@code tablename}对应{@code TableEntity}实现类，或{@code
-	 *         null}。
-	 */
-	public static TableEntity getTableEntity(TableEntity entity, Map<String, String[]> paramMap) {
-		if (entity != null) {
-			try {
-				BeanUtils.populate(entity, paramMap); // TODO 这里没有查出错误的数据输入
-				return entity;
-			} catch (IllegalAccessException e) {
-				e.printStackTrace();
-			} catch (InvocationTargetException e) {
-				e.printStackTrace();
-			}
 		}
 		return null;
 	}

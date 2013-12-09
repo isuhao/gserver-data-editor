@@ -17,6 +17,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -107,51 +108,39 @@ public class EditorController {
 	 * 保存表数据
 	 * 
 	 * @param model
-	 * @param tablename
+	 * @param table
 	 * @param request
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/{tablename}/save", method = { RequestMethod.POST })
-	public Map<String, Object> saveRow(Model model, @PathVariable TableEntity tablename, HttpServletRequest request) {
-		Map<String, String[]> parameterMap = request.getParameterMap();
+	@RequestMapping(value = "/{table}/save", method = { RequestMethod.POST })
+	public Map<String, Object> saveRow(Model model, @PathVariable TableEntity table, HttpServletRequest request){
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
-		if (parameterMap.isEmpty()) {
-			map.put("success", false);
-			return map;
-		} else {
-			TableEntity t = EntityUtils.getTableEntity(tablename, parameterMap);
-			tablesService.insertData(t);
-			Long code = t.getCode();
-			map.put("success", true);
-			map.put("code", code);
-			return map;
-		}
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(table);
+		binder.bind(request);
+		tablesService.insertData(table);
+		map.put("success", true);
+		map.put("code", table.getCode());
+		return map;
 	}
 
 	/**
 	 * 更新表数据
 	 * 
 	 * @param model
-	 * @param tablename
+	 * @param table
 	 * @param request
 	 * @return
 	 */
 	@ResponseBody
-	@RequestMapping(value = "/{tablename}/update", method = RequestMethod.POST)
-	public Map<String, Object> updateRow(Model model, @PathVariable TableEntity tablename, HttpServletRequest request) {
-		Map<String, String[]> parameterMap = request.getParameterMap();
+	@RequestMapping(value = "/{table}/update", method = RequestMethod.POST)
+	public Map<String, Object> updateRow(Model model, @PathVariable TableEntity table, HttpServletRequest request) {
+		ServletRequestDataBinder binder = new ServletRequestDataBinder(table);
+		binder.bind(request);
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
-		if (!parameterMap.isEmpty()) {
-			TableEntity t = EntityUtils.getTableEntity(tablename, parameterMap);
-			if (t.getCode() != null) {
-				tablesService.updateData(t);
-				map.put("success", true);
-				map.put("code", t.getCode());
-				return map;
-			}
-		}
-		map.put("success", false);
+		tablesService.updateData(table);
+		map.put("success", true);
+		map.put("code", table.getCode());
 		return map;
 	}
 
@@ -317,12 +306,12 @@ public class EditorController {
 	@RequestMapping(value = "/{folder}/downloadFolder", method = { RequestMethod.GET })
 	public void downloadFolder(@PathVariable String folder, HttpServletResponse response) throws IOException, ClassNotFoundException {
 		String name = folder.substring(folder.lastIndexOf('.'));
-		
+
 		response.reset();
 		response.setHeader("Content-Disposition", "attachment; filename=" + name + ".zip");
 		response.setContentType("application/octet-stream; charset=utf-8");
 
-		ZipOutputStream out = new ZipOutputStream(response.getOutputStream(),Charset.forName("utf-8"));
+		ZipOutputStream out = new ZipOutputStream(response.getOutputStream(), Charset.forName("utf-8"));
 		List<Class<TableEntity>> classes = Lists.newArrayList();
 		classes.addAll(ClassUtils.getSubClasses(folder, TableEntity.class));
 		for (Class<TableEntity> t : classes) {

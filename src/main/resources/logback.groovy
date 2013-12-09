@@ -9,6 +9,9 @@
 
 import ch.qos.logback.classic.encoder.PatternLayoutEncoder
 import ch.qos.logback.core.ConsoleAppender
+import ch.qos.logback.classic.filter.ThresholdFilter
+import ch.qos.logback.core.rolling.RollingFileAppender
+import ch.qos.logback.core.rolling.TimeBasedRollingPolicy
 
 import static ch.qos.logback.classic.Level.*
 
@@ -18,6 +21,23 @@ appender("STDOUT", ConsoleAppender) {
 	encoder(PatternLayoutEncoder) { 
 		pattern = DEFAULT_PATTERN 
 	}
+	filter(ThresholdFilter) {
+    level = INFO
+  	}
+}
+
+appender("JDBC", FileAppender) {
+  append = true
+  file = "./logs/jdbc."
+  encoder(PatternLayoutEncoder) {
+    pattern = "%d{yyyy-MM-dd HH:mm:ss.SSS} %m%n"
+  }
+  filter(ThresholdFilter) {
+    level = INFO
+  }
+  rollingPolicy(TimeBasedRollingPolicy) {
+    fileNamePattern = "logs/jdbc.%d{yyyy-MM-dd'.txt'}"
+  }
 }
 
 /* Make Spring less verbose. */
@@ -30,7 +50,10 @@ logger("org.eclipse.jetty.util.resource.JarResource", INFO)
 /* Quieten Jetty in general. */
 logger("org.eclipse", ERROR);
 
+logger("jdbc.sqlonly", INFO);
+
 def appenders = []
 appenders.add("STDOUT")
+appenders.add("JDBC")
 
 root(DEBUG, appenders)

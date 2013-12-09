@@ -221,7 +221,7 @@
 	</dependencies>
 
 	<build>
-
+		<finalName>server</finalName>
 		<plugins>
 
 			<plugin>
@@ -305,6 +305,50 @@
 						</configuration>
 					</execution>
 				</executions>
+			</plugin>
+			
+			<plugin>
+				<groupId>com.github.wvengen</groupId>
+				<artifactId>proguard-maven-plugin</artifactId>
+				<version>2.0.6</version>
+				<executions>
+					<execution>
+						<phase>install</phase>
+						<goals>
+							<goal>proguard</goal>
+						</goals>
+					</execution>
+				</executions>
+				<configuration>
+					<proguardVersion>4.10</proguardVersion>
+					<obfuscate>true</obfuscate>
+					<options>
+						<option>-printmapping map.txt</option><!-- 列出了原始的类，方法和字段名与混淆后代码间的映射-->
+						<option>-renamesourcefileattribute SourceFile</option>
+						<option>-keepattributes SourceFile,LineNumberTable</option>
+						<option>-printseeds seed.txt</option><!-- 列出类和类的成员-keep选项的清单，标准输出到给定的文件-->
+						<option>-printusage usage.txt</option><!-- #列出了删除的代码 -->
+					</options>
+					<proguardInclude>${basedir}/proguard.pro</proguardInclude>
+					<injar>${project.build.finalName}.jar</injar>
+					<outjar>${project.build.finalName}-small.jar</outjar>
+					<outputDirectory>${project.build.directory}/../${project.artifactId}/</outputDirectory>
+					<libs>
+						<lib>${java.home}/lib/rt.jar</lib>
+						<lib>${java.home}/lib/jsse.jar</lib>
+						<lib>${java.home}/lib/jce.jar</lib>
+					</libs>
+					<maxMemory>256m</maxMemory>
+					<addMavenDescriptor>false</addMavenDescriptor>
+				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>net.sf.proguard</groupId>
+						<artifactId>proguard-base</artifactId>
+						<version>4.10</version>
+						<scope>runtime</scope>
+					</dependency>
+				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

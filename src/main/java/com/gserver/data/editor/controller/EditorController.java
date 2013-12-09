@@ -246,6 +246,7 @@ public class EditorController {
 	}
 
 	/**
+	 * 获得数组控制列的所有配置的值，及这列数据类型
 	 * 
 	 * @param tableName
 	 * @param field

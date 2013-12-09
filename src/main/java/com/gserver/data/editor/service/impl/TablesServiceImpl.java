@@ -22,6 +22,7 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.annotation.ArrayData;
 import com.gserver.data.editor.annotation.Comment;
@@ -80,13 +81,13 @@ public class TablesServiceImpl implements TablesService {
 			Constraint cons = constraints.get(0);
 			editorOptionsForeign = new String[] { cons.getBname(), cons.getBpos() };
 		}
-
-		EntityUtils.setEditorType(dto, field, editorOptionsForeign);
+		List<ArrayRule> arrayRules_key = tablesDao.getAll(ArrayRule.class, Restrictions.eq("tableName", table), Restrictions.eq("keyField", fieldName));
+		EntityUtils.setEditorType(dto, field, editorOptionsForeign, arrayRules_key);
 		if (dto.getEditorType() == EditorType.Array) {
-			List<ArrayRule> arrayRules = tablesDao.getAll(ArrayRule.class, Restrictions.eq("tableName", table), Restrictions.eq("targetField", fieldName));
+			List<ArrayRule> arrayRules_target = tablesDao.getAll(ArrayRule.class, Restrictions.eq("tableName", table), Restrictions.eq("targetField", fieldName));
 			// Map<控制列名, Map<可能的控制值, List<ArrayRule>>>
 			Map<String, Map<String, List<ArrayRule>>> map = Maps.newHashMap();
-			for (ArrayRule arrayRule : arrayRules) {
+			for (ArrayRule arrayRule : arrayRules_target) {
 				Map<String, List<ArrayRule>> bySameKeyField = map.get(arrayRule.getKeyField());
 				if (bySameKeyField == null) {
 					bySameKeyField = Maps.newHashMap();
@@ -224,4 +225,12 @@ public class TablesServiceImpl implements TablesService {
 		return list;
 	}
 
+	public Set<String> getKeyOptions(String tableName, String field) {
+		List<ArrayRule> alist = tablesDao.getAll(ArrayRule.class, Restrictions.eq("tableName", tableName), Restrictions.eq("keyField", field));
+		Set<String> set = Sets.newTreeSet();
+		for (ArrayRule one : alist) {
+			set.add(one.getKeyValue());
+		}
+		return set;
+	}
 }

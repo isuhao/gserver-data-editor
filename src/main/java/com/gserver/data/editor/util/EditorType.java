@@ -5,5 +5,5 @@ package com.gserver.data.editor.util;
  * 
  */
 public enum EditorType {
-	NoEditor, J_String, J_Byte, J_Short, J_Integer, J_Long, J_Float, J_Double, Array, Foreign,
+	NoEditor, J_String, J_Byte, J_Short, J_Integer, J_Long, J_Float, J_Double, Array, Foreign, Key;
 }

@@ -11,28 +11,31 @@
 						<th field="${column.name}" width="50" editor="{type:'text',options:{required:false}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="J_Byte"}'>
-						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Byte'}}">${column.comment}</th>
+						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Byte', required:true}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="J_Short"}'>
-						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Short'}}">${column.comment}</th>
+						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Short', required:true}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="J_Integer"}'>
-						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Integer'}}">${column.comment}</th>
+						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Integer', required:true}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="J_Long"}'>
-						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Long'}}">${column.comment}</th>
+						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Long', required:true}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="J_Float"}'>
-						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Float'}}">${column.comment}</th>
+						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Float', required:true}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="J_Double"}'>
-						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Double'}}">${column.comment}</th>
+						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Double', required:true}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="Array"}'>
 						<th field="${column.name}" width="50" editor='{type:"arrayDialog", options:{divId:"arrayDlg", dialogTableId:"arrayDlgTable", table:"${tablename}", field:"${column.name}", arrayRule:${column.editorOptions[0]} }}'>${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="Foreign"}'>
 						<th field="${column.name}" width="50" editor="{type:'tableWindow', options:{divId:'popTableWin', table:'${tablename}', field:'${column.name}', openTable:'${column.editorOptions[0]}', openTableField:'${column.editorOptions[1]}'}}">${column.comment}</th>
+					</c:when>
+					<c:when test='${column.editorType=="Key"}'>
+						<th field="${column.name}" width="50" editor="{type:'validateCombobox', options:{table:'${tablename}', field:'${column.name}'}}">${column.comment}</th>
 					</c:when>
 					<c:otherwise>
 						<th field="${column.name}" width="50" editor="{type:'text',options:{required:false}}">${column.comment}</th>

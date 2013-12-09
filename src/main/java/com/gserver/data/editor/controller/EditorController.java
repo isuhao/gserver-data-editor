@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
@@ -33,6 +34,7 @@ import com.gserver.data.editor.service.TablesService;
 import com.gserver.data.editor.util.BaseQEntity;
 import com.gserver.data.editor.util.ClassUtils;
 import com.gserver.data.editor.util.EntityUtils;
+import com.gserver.data.editor.util.ReflectionUtils;
 import com.gserver.data.editor.util.Servlets;
 
 @Controller
@@ -243,6 +245,23 @@ public class EditorController {
 		return data;
 	}
 
+	/**
+	 * 
+	 * @param tableName
+	 * @param field
+	 * @return
+	 */
+	@ResponseBody
+	@RequestMapping(value = "/validateCombobox", method = RequestMethod.POST)
+	public Map<String, Object> getKeyFiledValues(@RequestParam(required = true) String tableName, @RequestParam(required = true) String field) {
+		Map<String, Object> model = Maps.newHashMap();
+		Set<String> valueSet = tablesService.getKeyOptions(tableName, field);
+		model.put("options", valueSet);
+		model.put("dataType", ReflectionUtils.getDeclaredField(EntityUtils.getMappedClass(tableName), field).getType().getSimpleName());
+		return model;
+	}
+
+	
 	/**
 	 * 锁定表
 	 * 

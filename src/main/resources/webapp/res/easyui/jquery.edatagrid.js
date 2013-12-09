@@ -485,6 +485,89 @@
 	});
 
 	$.extend($.fn.datagrid.defaults.editors, {
+		validateCombobox: {
+			init: function(container, options){
+				var combodata;
+				var validType = undefined;
+				var required = undefined;
+				$.ajax({
+					url : "../validateCombobox",
+					type : 'post',
+					async : false,
+					data : {
+						tableName : options.table,
+						field : options.field
+					},
+					dataType : 'json',
+					success : function(data) {
+						combodata = data.options;
+						switch (data.dataType) {
+						case "byte":
+						case "Byte":
+							validType = "J_Byte";
+							required = "required";
+							break;
+						case "short":
+						case "Short":
+							validType = "J_Short";
+							required = "required";
+							break;
+						case "int":
+						case "Integer":
+							validType = "J_Integer";
+							required = "required";
+							break;
+						case "long":
+						case "Long":
+							validType = "J_Long";
+							required = "required";
+							break;
+						case "float":
+						case "Float":
+							validType = "J_Float";
+							required = "required";
+							break;
+						case "double":
+						case "Double":
+							validType = "J_Double";
+							required = "required";
+							break;
+						default:
+							validType = undefined;
+							break;
+						}
+					}
+				});
+				var $combobox = $('<input>');
+				if (validType) {
+					$combobox.attr('validType', validType);
+				}
+				if (required) {
+					$combobox.attr('required', required);
+				}
+	        	$combobox.appendTo(container);
+	            return $combobox.combobox({
+						data : combodata,
+						valueField : "0",
+						textField : "0",
+						formatter: function(row){
+	            			return row;
+	            		}
+					});
+	        },
+	        destroy: function(target){
+	            $(target).combobox('destroy');
+	        },
+	        getValue: function(target){
+	            return $(target).combobox('getValue');
+	        },
+	        setValue: function(target, value){
+	        	$(target).combobox('setValue', value);
+	        },
+	        resize: function(target, width){
+	        	$(target).combobox('resize',width);
+	        }
+	    },
 		tableWindow : {
 			init : function(container, options) {
 				if ($.fn.datagrid.defaults.editors.tableWindow.static_counter === undefined) {
@@ -524,10 +607,7 @@
 			resize : function(target, width) {
 				$(target)._outerWidth(width);
 			}
-		}
-	});
-
-	$.extend($.fn.datagrid.defaults.editors, {
+		},
 		arrayDialog : {
 			init : function(container, options) {
 				var arrayRule = options.arrayRule;

@@ -3,6 +3,7 @@ package com.gserver.data.editor.service;
 import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.dto.TableTitle;
@@ -81,4 +82,16 @@ public interface TablesService {
 	 * @return 包名得到包内数据表的树状结构。
 	 */
 	public List<Tree> getTreeLayer(String packageName);
+
+	/**
+	 * 根据表名和一个字段的名字，去数组配置表查找这个字段已配的可能值。
+	 * 
+	 * @param tableName
+	 *            表名
+	 * @param field
+	 *            字段名
+	 * @return 数组配置表中配的，这个表这个字段的可能值集合。
+	 */
+	public Set<String> getKeyOptions(String tableName, String field);
+
 }

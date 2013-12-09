@@ -19,6 +19,7 @@ import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.annotation.ArrayData;
 import com.gserver.data.editor.annotation.Comment;
 import com.gserver.data.editor.dto.TableTitle;
+import com.gserver.data.editor.entity.conf.ArrayRule;
 
 public class EntityUtils {
 	public static final String PACKAGE = "com.gserver.data.editor.entity";
@@ -117,7 +118,7 @@ public class EntityUtils {
 	 * @param editorOptionsForeign
 	 *            查出的关联表配置参数
 	 */
-	public static void setEditorType(TableTitle dto, Field field, String[] editorOptionsForeign) {
+	public static void setEditorType(TableTitle dto, Field field, String[] editorOptionsForeign, List<ArrayRule> arrayRules_key) {
 		Class<?> fieldClass = field.getType();
 		// NoEditor
 		if (field.isAnnotationPresent(Id.class) && field.isAnnotationPresent(GeneratedValue.class) && field.getAnnotation(GeneratedValue.class).strategy() == GenerationType.AUTO) {
@@ -133,6 +134,11 @@ public class EntityUtils {
 		if (editorOptionsForeign != null) {
 			dto.setEditorType(EditorType.Foreign);
 			dto.setEditorOptions(editorOptionsForeign);
+			return;
+		}
+		// Key
+		if (arrayRules_key != null && arrayRules_key.size() > 0) {
+			dto.setEditorType(EditorType.Key);
 			return;
 		}
 		// J_String

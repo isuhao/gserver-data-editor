@@ -92,6 +92,6 @@ public interface TablesService {
 	 *            字段名
 	 * @return 数组配置表中配的，这个表这个字段的可能值集合。
 	 */
-	public Set<String> getKeyOptions(String tableName, String field);
+	public List<String> getKeyOptions(String tableName, String field);
 
 }

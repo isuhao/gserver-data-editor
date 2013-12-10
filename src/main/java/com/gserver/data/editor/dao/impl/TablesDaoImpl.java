@@ -8,6 +8,7 @@ import javax.persistence.Query;
 
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Projection;
 import org.hibernate.criterion.Projections;
 import org.springframework.stereotype.Repository;
 
@@ -26,6 +27,24 @@ public class TablesDaoImpl extends BaseDaoImpl implements TablesDao {
 		}
 		@SuppressWarnings("unchecked")
 		List<T> list = (List<T>) criteria.list();
+
+		return list;
+	}
+
+	public <T> List<String> getAll(Class<T> clazz, Projection p, Criterion... criterion) {
+		Criteria criteria = getCurrentSession().createCriteria(clazz);
+		if (criterion != null) {
+			for (Criterion c : criterion) {
+				criteria.add(c);
+			}
+		}
+
+		if (p != null) {
+			criteria.setProjection(Projections.projectionList().add(Projections.distinct(p)));
+		}
+
+		@SuppressWarnings("unchecked")
+		List<String> list = (List<String>) criteria.list();
 
 		return list;
 	}

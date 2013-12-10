@@ -255,7 +255,7 @@ public class EditorController {
 	@RequestMapping(value = "/validateCombobox", method = RequestMethod.POST)
 	public Map<String, Object> getKeyFiledValues(@RequestParam(required = true) String tableName, @RequestParam(required = true) String field) {
 		Map<String, Object> model = Maps.newHashMap();
-		Set<String> valueSet = tablesService.getKeyOptions(tableName, field);
+		List<String> valueSet = tablesService.getKeyOptions(tableName, field);
 		model.put("options", valueSet);
 		model.put("dataType", ReflectionUtils.getDeclaredField(EntityUtils.getMappedClass(tableName), field).getType().getSimpleName());
 		return model;

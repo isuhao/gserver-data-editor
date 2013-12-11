@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.InitBinder;
 
 import com.gserver.data.editor.exception.ParameterException;
 import com.gserver.data.editor.util.EntityUtils;
-import com.gserver.data.editor.util.ReflectionUtils;
 
 @ControllerAdvice
 public class GlobalControllerAdvice {
@@ -30,8 +29,7 @@ public class GlobalControllerAdvice {
 			@Override
 			public void setAsText(String text) throws IllegalArgumentException {
 
-				Class<TableEntity> beanClass = EntityUtils.getMappedClass(text);
-				TableEntity newInstance = ReflectionUtils.getNewInstance(beanClass);
+				TableEntity newInstance=EntityUtils.getEntityInstance(text);
 				new ServletRequestDataBinder(newInstance).bind(request);
 				setValue(newInstance);
 			}

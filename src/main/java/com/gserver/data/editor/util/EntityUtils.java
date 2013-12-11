@@ -67,6 +67,21 @@ public class EntityUtils {
 	}
 
 	/**
+	 * 通过表名获得表实例
+	 * 
+	 * @param tableName
+	 * @return
+	 */
+	public static TableEntity getEntityInstance(String tableName) {
+		Class<TableEntity> mappedClass = getMappedClass(tableName);
+		if (mappedClass == null) {
+			return null;
+		}
+		TableEntity newInstance = ReflectionUtils.getNewInstance(mappedClass);
+		return newInstance;
+	}
+
+	/**
 	 * 根据表名和字段名得到这一列数据缺省值。
 	 * <p>
 	 * 主要是以POJO字段类型分类，也会参考字段上的注解。

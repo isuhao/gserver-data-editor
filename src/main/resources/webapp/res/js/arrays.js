@@ -1,6 +1,16 @@
+/**
+ * arrayeditor
+ * 
+ * 数组编辑器
+ * 
+ * Dependencies:
+ *   datagrid
+ *   messager
+ *   tableWindow
+ */
 (function($) {
 	$.fn.arrayeditor = function(options, param) {
-		if ( typeof options == 'string') {
+		if ( typeof options === 'string') {
 			var method = $.fn.arrayeditor.methods[options];
 			if (method) {
 				return method(this, param);
@@ -60,8 +70,7 @@
 
 		var $dialogDiv = $('#' + opts.divId).empty().append($('<table id="' + opts.dialogTableId + '"></table>'));
 
-		createTable(opts.inputJq.val());
-		function createTable(oldValue) {
+		(function createTable(oldValue) {
 			var colGroups = function() {
 				var colGroups = [];
 				var cols = [];
@@ -122,10 +131,10 @@
 						}
 					}
 				});
-				if (cols.length == 0) {// 说明前面的控制字段填写错误，可以出个警告
+				if (cols.length === 0) {// 说明前面的控制字段填写错误，可以出个警告
 					$.messager.show({
-						title : '控制字段值非法',
-						msg : "无法生成数组元素标题，您输入的控制字段值可能错误！",
+						title : '未找到数组列标题',
+						msg : "无法生成数组元素标题，未配置此数组，或者您输入了错误的控制字段值！",
 						timeout : 5000,
 						showType : 'slide'
 					});
@@ -144,13 +153,13 @@
 			}();
 			var data = function(oldValue, arrayRule) {
 				var datArray = [];
-				if (oldValue != '') {
+				if (oldValue !== '') {
 					var titleLength = colGroups[0].length;
 					// 不可能为0，前面至少放了一列
 					var splitarray = oldValue.split(',');
 					if (splitarray.length % titleLength) {
 						$.messager.show({
-							title : '原输入数组长度',
+							title : '原输入和数组列数不匹配',
 							msg : "原输入数组长度，不是列的整数倍，表格后面补了" + (titleLength - splitarray.length % titleLength) + "个空单元格！",
 							timeout : 5000,
 							showType : 'slide'
@@ -158,7 +167,7 @@
 					}
 					var datium;
 					for (var i = 0; i < splitarray.length; ++i) {
-						if (i % titleLength == 0) {
+						if (i % titleLength === 0) {
 							datium = {};
 							datArray.push(datium);
 						}
@@ -262,7 +271,7 @@
 				return finalStr;
 			}
 
-		}
+		}(opts.inputJq.val()));
 
 		$dialogDiv.dialog({
 			title : '数组编辑器',

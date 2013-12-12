@@ -12,8 +12,8 @@
                                 url:'../getTables',
                                 required : true,
                                 onSelect : function(titlePair) {
-                                	generateRaletedOptions(titlePair[0], '${columns[2].name}');
-                                	generateRaletedOptions(titlePair[0], '${columns[3].name}');
+                                	reloadOptions(titlePair[0], '${columns[2].name}');
+                                	reloadOptions(titlePair[0], '${columns[3].name}');
                                 }
                             }
                         }">${columns[1].comment}</th>

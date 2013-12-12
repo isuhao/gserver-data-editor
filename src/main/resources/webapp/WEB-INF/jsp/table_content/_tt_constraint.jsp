@@ -12,7 +12,7 @@
                                 url:'../getTables',
                                 required : true,
                                 onSelect : function(titlePair) {
-                                	generateRaletedOptions(titlePair[0], '${columns[2].name}');
+                                	reloadOptions(titlePair[0], '${columns[2].name}');
                                 }
                             }
                         }">${columns[1].comment}</th>
@@ -26,7 +26,7 @@
                                 url:'../getTables',
                                 required : true,
                                 onSelect : function(titlePair) {
-                                	generateRaletedOptions(titlePair[0], '${columns[4].name}');
+                                	reloadOptions(titlePair[0], '${columns[4].name}');
                                 }
                             }
                         }">${columns[3].comment}</th>

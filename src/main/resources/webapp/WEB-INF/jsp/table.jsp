@@ -11,6 +11,8 @@
 		<script type="text/javascript" src="../res/easyui/jquery-1.8.0.min.js"></script>
 		<script type="text/javascript" src="../res/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../res/easyui/jquery.edatagrid.js"></script>
+		<script type="text/javascript" src="../res/js/jquery.validsplus.js"></script>
+		<script type="text/javascript" src="../res/js/jquery.editorsplus.js"></script>
 		<script type="text/javascript" src="../res/js/table.js"></script>
 		<script type="text/javascript" src="../res/js/table_popup.js"></script>
 		<script type="text/javascript" src="../res/js/arrays.js"></script>

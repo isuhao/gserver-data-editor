@@ -290,7 +290,11 @@
 		/**
 		 *请求约束关系表的url 
 		 */
-		constraintUrl : '../_tt_constraint/find'
+		constraintUrl : '../_tt_constraint/find',
+		/**
+		 * 转为弹出层元素的选择器
+		 */
+		popDialogJq : undefined
 	});
 
 })(jQuery);

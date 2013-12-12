@@ -91,12 +91,12 @@
 	        	$(target).combobox('resize',width);
 	        }
 	    },
-		tableWindow : {
+		tableDialog : {
 			init : function(container, options) {
-				if ($.fn.datagrid.defaults.editors.tableWindow.static_counter === undefined) {
-					$.fn.datagrid.defaults.editors.tableWindow.static_counter = 0;
+				if ($.fn.datagrid.defaults.editors.tableDialog.static_counter === undefined) {
+					$.fn.datagrid.defaults.editors.tableDialog.static_counter = 0;
 				}
-				var counter = $.fn.datagrid.defaults.editors.tableWindow.static_counter++;
+				var counter = $.fn.datagrid.defaults.editors.tableDialog.static_counter++;
 				var popup = options.divId;
 				var table = options.table;
 				var field = options.field;

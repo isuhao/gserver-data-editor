@@ -8,13 +8,34 @@
  */
 (function($) {
 	$.extend($.fn.datagrid.defaults.editors, {
+		/**
+		 * validateCombobox
+		 * combobox结合对表字段进行java类型验证的edatagrid编辑器类型，数据内容必填（required）。
+		 * 
+		 * 当edatagrid的某个field绑定editor为validateCombobox，会向url地址发起请求，得到形如： 
+		 * 	{options: ['data_1', 'data_2', 'data_3'], dataType: 'String'}
+		 * 的数据。options为combobox的data选项数据，dataType为做验证用的java数据类型。
+		 * 
+		 * options参数：
+		 * 	table：当前编辑的表名，
+		 * 	field：对应的字段名，
+		 * 	url：数据选项请求地址
+		 * 
+		 * 依赖： jquery.validsplus.js
+		 * 
+		 * 用法：
+		 * <c:if test='${column.editorType=="Key"}'>
+		 * <th field="${column.name}" width="50" editor="{type:'validateCombobox', options:{table:'${tablename}', field:'${column.name}', url:'../validateCombobox'}}">${column.comment}</th>
+		 * </c:if>
+		 * 
+		 */
 		validateCombobox: {
 			init: function(container, options){
 				var combodata;
 				var validType = undefined;
 				var required = undefined;
 				$.ajax({
-					url : "../validateCombobox",
+					url : options.url,
 					type : 'post',
 					async : false,
 					data : {
@@ -91,6 +112,15 @@
 	        	$(target).combobox('resize',width);
 	        }
 	    },
+	    /**
+	     * tableDialog
+	     * 弹出表关联界面编辑器，每个页面单例。
+	     * 
+	     * options参数：
+	     * 	table：当前编辑的表名，
+		 * 	field：对应的字段名，
+		 * 	openTable：弹出表的表名
+	     */
 		tableDialog : {
 			init : function(container, options) {
 				var field = options.field;
@@ -130,6 +160,24 @@
 				$(target)._outerWidth(width);
 			}
 		},
+		 /**
+	     * arrayDialog
+	     * 数组编辑器，每个页面单例。
+	     * 
+	     * options参数：
+	     * 	table：当前编辑的表名，
+		 * 	field：对应的字段名，
+		 * 	containerDg：父层datagrid的selector，
+		 * 	arrayRule：数组控制规则，形如，
+		 * 		{"type":{
+		 * 			"1":[
+		 * 				{"code":1,"constraint_id":1,"desc":"1st","idx":1,"keyField":"type","keyValue":"1","tableName":"talent","targetField":"value"},
+		 * 				{"code":2,"constraint_id":-1,"desc":"2nd","idx":2,"keyField":"type","keyValue":"1","tableName":"talent","targetField":"value"}
+		 * 			]
+		 * 		}}
+		 * 依赖：
+		 * jquery.edatagrid.js
+	     */
 		arrayDialog : {
 			init : function(container, options) {
 				var field = options.field;
@@ -143,8 +191,8 @@
 						arrayRule : options.arrayRule,
 						table : options.table,
 						field : field,
-						parentDg : $('#dg'),
-						parentEditIndex : $('#dg').edatagrid('getClickIndex')
+						parentDg : $(options.containerDg),
+						parentEditIndex : $(options.containerDg).edatagrid('getClickIndex')
 					});
 					$.fn.datagrid.defaults.editors.arrayDialog.static_window = $window;
 				}).appendTo(container);

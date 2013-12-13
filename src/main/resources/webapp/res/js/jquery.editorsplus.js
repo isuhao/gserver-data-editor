@@ -19,7 +19,7 @@
 		 * options参数：
 		 * 	table：当前编辑的表名，
 		 * 	field：对应的字段名，
-		 * 	url：数据选项请求地址
+		 * 	url：数据选项请求地址。
 		 * 
 		 * 依赖： jquery.validsplus.js
 		 * 
@@ -119,7 +119,11 @@
 	     * options参数：
 	     * 	table：当前编辑的表名，
 		 * 	field：对应的字段名，
-		 * 	openTable：弹出表的表名
+		 * 	openTable：弹出表的表名，
+		 * 	openTableField：弹出表的关联字段名。
+		 * 
+		 * 依赖：
+		 * table_popup.jsp
 	     */
 		tableDialog : {
 			init : function(container, options) {
@@ -175,8 +179,11 @@
 		 * 				{"code":2,"constraint_id":-1,"desc":"2nd","idx":2,"keyField":"type","keyValue":"1","tableName":"talent","targetField":"value"}
 		 * 			]
 		 * 		}}
+		 * 
 		 * 依赖：
 		 * jquery.edatagrid.js
+		 * tableDialog
+		 * table_popup.jsp
 	     */
 		arrayDialog : {
 			init : function(container, options) {
@@ -190,6 +197,8 @@
 						inputTarget : $(this),
 						arrayRule : options.arrayRule,
 						table : options.table,
+						// 以下三行是为了得到数组控制字段的值。因为此editor生成时不知道控制字段的值是什么，
+						// 只能传datagrid和编辑的行，生成弹出时再去动态查询。
 						field : field,
 						parentDg : $(options.containerDg),
 						parentEditIndex : $(options.containerDg).edatagrid('getClickIndex')

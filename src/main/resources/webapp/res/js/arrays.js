@@ -90,10 +90,10 @@
 						} catch (e) {// TypeError
 							editor = undefined;
 						}
-						if (!editor) {
+						if (!editor) { // 这种情况因为：控制列是不可编辑的，或者控制列的editor尚未初始化，从原始数据中取值。
 							var row = $parentDg.datagrid('getRows')[clickIndex];
 							value = row[field];
-						} else {
+						} else { // 如果能取到editor，必须从editor取用户输入的新值
 							value = editor.actions.getValue(editor.target);
 						}
 						if (value === undefined)

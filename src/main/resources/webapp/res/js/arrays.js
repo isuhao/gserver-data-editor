@@ -39,7 +39,7 @@
 
 	function buildEditor(target) {
 		var opts = $.data(target, 'arrayeditor').options;
-		opts.earliestValue = opts.inputJq.val();
+		opts.earliestValue = opts.inputTarget.val();
 		var arrayRule = opts.arrayRule;
 		for (var keyField in arrayRule) {
 			for (var keyPossibleValue in arrayRule[keyField]) {
@@ -231,7 +231,7 @@
 					handler : function() {
 						// 还原表格内容的同时，还要讲父层那个输入框的内容还原
 						$dialogTable.datagrid('rejectChanges');
-						opts.inputJq.val(opts.earliestValue);
+						opts.inputTarget.val(opts.earliestValue);
 						$.messager.show({
 							title : '设置成功',
 							msg : '数组值还原成功，录入值：' + opts.earliestValue + '。',
@@ -251,7 +251,7 @@
 					iconCls : 'icon-ok',
 					handler : function() {
 						var finalStrValue = _generateValue();
-						opts.inputJq.val(finalStrValue);
+						opts.inputTarget.val(finalStrValue);
 						$.messager.show({
 							title : '设置成功',
 							msg : '数组值设置成功，录入值：' + finalStrValue + '。',
@@ -282,7 +282,7 @@
 				return finalStr;
 			}
 
-		}(opts.inputJq.val()));
+		}(opts.inputTarget.val()));
 
 		$dialogDiv.dialog({
 			title : '数组编辑器',

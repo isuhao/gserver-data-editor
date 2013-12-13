@@ -77,9 +77,6 @@
 		<div class="secret-infomation">
 			<div id="popTableWin"></div>
 			<div id="arrayDlg"></div>
-			<div>
-				<input type="hidden" id="popWinInputId" value=""/>
-			</div>
 		</div>
 	</body>
 </html>

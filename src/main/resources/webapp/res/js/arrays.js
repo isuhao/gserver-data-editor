@@ -106,7 +106,7 @@
 								var editor;
 								if (colInfo[i].toTableName) {
 									editor = {
-										type : 'tableWindow',
+										type : 'tableDialog',
 										options : {
 											divId : 'popTableWin',
 											table : colInfo[i].toTableName,

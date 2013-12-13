@@ -99,6 +99,6 @@ function assign(newValue) {
  *得到与此编辑器相关联的那个input元素
  */
 function getInputJq() {
-	var inputJqId = '#' + $('#popWinInputId').val();
+	var inputJqId = '#' + $.fn.datagrid.defaults.editors.tableDialog.static_targetInputId;
 	return $(inputJqId);
 }

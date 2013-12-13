@@ -102,9 +102,10 @@
 				var field = options.field;
 				var openTable = options.openTable;
 				var openTableField = options.openTableField;
-				var inputId = 'tableWinInput_' + field + '_' + counter;
+				var inputId = 'tableInput_' + field + '_' + counter;
 				var input = $('<input id="' + inputId + '" type="text" class="datagrid-editable-input" readonly="true">').click(function() {
-					$('#popWinInputId').val($(this).attr('id'));
+					//$('#popWinInputId').val($(this).attr('id'));
+					$.fn.datagrid.defaults.editors.tableDialog.static_targetInputId = $(this).attr('id');
 					var url = '../' + openTable + '/popopen?relatedfield=' + openTableField + '&table=' + table + '&field=' + field;
 					$('#'+popup).window({
 						width : 718,

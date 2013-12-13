@@ -17,33 +17,33 @@ function setDefault() {
  */
 function appendVal(maxLength) {
 	var newVal = getSelectedVal();
-	var oldValue = getInputJq().val();
-
-	if (oldValue && oldValue != getDefaultVal()) {
-		var valueArray = oldValue.split(',');
-		if (maxLength > 0 && valueArray.length >= maxLength) {
-			$.messager.alert('关联失败', '元素上限：' + maxLength + '，已关联：' + valueArray.length + '行（录入值：' + oldValue + '）。', 'error');
-			return;
+	if (newVal !== null) {
+		var oldValue = getInputJq().val();
+		if (oldValue && oldValue != getDefaultVal()) {
+			var valueArray = oldValue.split(',');
+			if (maxLength > 0 && valueArray.length >= maxLength) {
+				$.messager.alert('关联失败', '元素上限：' + maxLength + '，已关联：' + valueArray.length + '行（录入值：' + oldValue + '）。', 'error');
+				return;
+			} else {
+				valueArray.push(newVal);
+				assign(valueArray.join(','));
+				$.messager.show({
+					title : '关联成功',
+					msg : '增加关联成功。已关联：' + valueArray.length + '行（录入值：' + getInputJq().val() + '），还可关联' + (maxLength == 0 ? '无限' : '' + (maxLength - valueArray.length)) + '行',
+					timeout : 2500,
+					showType : 'slide'
+				});
+			}
 		} else {
-			valueArray.push(newVal);
-			assign(valueArray.join(','));
+			assign(newVal);
 			$.messager.show({
 				title : '关联成功',
-				msg : '增加关联成功。已关联：' + valueArray.length + '行（录入值：' + getInputJq().val() + '），还可关联' + (maxLength == 0 ? '无限' : '' + (maxLength - valueArray.length)) + '行',
+				msg : '增加关联成功。已关联：1行（录入值：' + newVal + '），还可关联' + (maxLength == 0 ? '无限' : maxLength - 1) + '行',
 				timeout : 2500,
 				showType : 'slide'
 			});
 		}
-	} else {
-		assign(newVal);
-		$.messager.show({
-			title : '关联成功',
-			msg : '增加关联成功。已关联：1行（录入值：' + newVal + '），还可关联' + (maxLength == 0 ? '无限' : maxLength - 1) + '行',
-			timeout : 2500,
-			showType : 'slide'
-		});
 	}
-
 }
 
 /**
@@ -61,24 +61,28 @@ function display(maxLength) {
  */
 function setVal() {
 	var newVal = getSelectedVal();
-	assign(newVal);
-	$.messager.show({
+	if (newVal !== null) {
+		assign(newVal);
+		$.messager.show({
 			title : '关联成功',
 			msg : '设置关联成功。已关联：1行（录入值：' + newVal + '），',
 			timeout : 2500,
 			showType : 'slide'
 		});
+	}
 }
 
 /**
- *得到选定行的关联列的值
+ *得到选定行的关联列的值，若未选返回null
  */
 function getSelectedVal() {
 	var $pdg = $('#pdg');
 	var pdg_selectedrow = $pdg.datagrid("getSelected");
 	var pdg_field = $('#pdg_field').val();
-	var pdg_target = pdg_selectedrow[pdg_field];
-	return pdg_target;
+	if (pdg_selectedrow !== null) {
+		return pdg_selectedrow[pdg_field];
+	}
+	return null;
 }
 
 /**
@@ -99,6 +103,5 @@ function assign(newValue) {
  *得到与此编辑器相关联的那个input元素
  */
 function getInputJq() {
-	var inputJqId = '#' + $.fn.datagrid.defaults.editors.tableDialog.static_targetInputId;
-	return $(inputJqId);
+	return $.fn.datagrid.defaults.editors.tableDialog.static_targetInput;
 }

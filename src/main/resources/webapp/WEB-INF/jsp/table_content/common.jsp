@@ -32,7 +32,7 @@
 						<th field="${column.name}" width="50" editor='{type:"arrayDialog", options:{divId:"arrayDlg", dialogTableId:"arrayDlgTable", table:"${tablename}", field:"${column.name}", arrayRule:${column.editorOptions[0]} }}'>${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="Foreign"}'>
-						<th field="${column.name}" width="50" editor="{type:'tableDialog', options:{divId:'popTableWin', table:'${tablename}', field:'${column.name}', openTable:'${column.editorOptions[0]}', openTableField:'${column.editorOptions[1]}'}}">${column.comment}</th>
+						<th field="${column.name}" width="50" editor="{type:'tableDialog', options:{table:'${tablename}', field:'${column.name}', openTable:'${column.editorOptions[0]}', openTableField:'${column.editorOptions[1]}'}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="Key"}'>
 						<th field="${column.name}" width="50" editor="{type:'validateCombobox', options:{table:'${tablename}', field:'${column.name}'}}">${column.comment}</th>

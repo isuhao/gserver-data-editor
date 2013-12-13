@@ -221,7 +221,7 @@
 					iconCls : 'icon-remove',
 					handler : function() {
 						var editIndex = $dialogTable.datagrid('getRowIndex', $dialogTable.datagrid('getSelected'));
-						if (editIndex == undefined) {
+						if (editIndex === -1) {
 							return;
 						}
 						$dialogTable.datagrid('cancelEdit', editIndex).datagrid('deleteRow', editIndex);

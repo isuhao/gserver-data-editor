@@ -93,21 +93,18 @@
 	    },
 		tableDialog : {
 			init : function(container, options) {
-				if ($.fn.datagrid.defaults.editors.tableDialog.static_counter === undefined) {
-					$.fn.datagrid.defaults.editors.tableDialog.static_counter = 0;
-				}
-				var counter = $.fn.datagrid.defaults.editors.tableDialog.static_counter++;
-				var popup = options.divId;
-				var table = options.table;
 				var field = options.field;
-				var openTable = options.openTable;
-				var openTableField = options.openTableField;
-				var inputId = 'tableInput_' + field + '_' + counter;
-				var input = $('<input id="' + inputId + '" type="text" class="datagrid-editable-input" readonly="true">').click(function() {
-					//$('#popWinInputId').val($(this).attr('id'));
-					$.fn.datagrid.defaults.editors.tableDialog.static_targetInputId = $(this).attr('id');
-					var url = '../' + openTable + '/popopen?relatedfield=' + openTableField + '&table=' + table + '&field=' + field;
-					$('#'+popup).window({
+				// 先放一个text，点击这个text的时候，触发事件，生成弹出框。弹出层是模态窗口，保证关窗口前不会再次触发text的click事件。
+				var input = $('<input type="text" class="datagrid-editable-input" readonly="true">').click(function() {
+					//同页面，tableDialog只能弹出一个，公用原型中的static_targetInput
+					$.fn.datagrid.defaults.editors.tableDialog.static_targetInput = $(this);
+					var url = '../' + options.openTable + '/popopen?relatedfield=' + options.openTableField + '&table=' + options.table + '&field=' + field;
+					//只能有一个$window
+					var $window = $.fn.datagrid.defaults.editors.tableDialog.static_window;
+					if ($window) {
+						$window.remove();
+					}
+					$window = $('<div>').appendTo($(this).parent()).window({
 						width : 718,
 						height : 344,
 						minimizable : false,
@@ -116,6 +113,7 @@
 						title : field,
 						href : url
 					});
+					$.fn.datagrid.defaults.editors.tableDialog.static_window = $window;
 				}).appendTo(container);
 				return input;
 			},

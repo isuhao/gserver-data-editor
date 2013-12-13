@@ -75,7 +75,6 @@
 			</table>
 		</div>
 		<div class="secret-infomation">
-			<div id="popTableWin"></div>
 			<div id="arrayDlg"></div>
 		</div>
 	</body>

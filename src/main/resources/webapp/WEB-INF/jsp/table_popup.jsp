@@ -13,7 +13,7 @@
 	<body>
 		<table id="pdg" title="" class="easyui-datagrid" style="width:700px;height:308px"
 		url="../${tablename}/loaddata" toolbar="#poptoolbar" pagination="true"
-		rownumbers="true" fitColumns="true" singleSelect="true">
+		rownumbers="true" fitColumns="true" fit="true" singleSelect="true">
 			<thead>
 				<tr>
 					<c:forEach var="column" items="${columns}">

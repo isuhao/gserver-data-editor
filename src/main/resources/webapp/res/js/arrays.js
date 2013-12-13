@@ -69,7 +69,7 @@
 		}
 
 		var $dialogTable = $('<table>');
-		var $dialogDiv = $('#' + opts.divId).empty().append($dialogTable);
+		var $dialogDiv = $(target).empty().append($dialogTable);
 
 		(function createTable(oldValue) {
 			var colGroups = function() {
@@ -183,7 +183,7 @@
 				data : data,
 				rownumbers : true,
 				fitColumns : false,
-
+				fit : true,
 				onClickCell : function(index, field, value) {
 					var lastIndex = $(this).datagrid('getRowIndex', $(this).datagrid('getSelected'));
 					if (lastIndex !== undefined && lastIndex >= 0) {

@@ -74,8 +74,5 @@
 				</tbody>
 			</table>
 		</div>
-		<div class="secret-infomation">
-			<div id="arrayDlg"></div>
-		</div>
 	</body>
 </html>

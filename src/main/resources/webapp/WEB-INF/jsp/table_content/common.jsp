@@ -29,7 +29,7 @@
 						<th field="${column.name}" width="50" align:'center' editor="{type:'validatebox',options:{validType:'J_Double', required:true}}">${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="Array"}'>
-						<th field="${column.name}" width="50" editor='{type:"arrayDialog", options:{divId:"arrayDlg", table:"${tablename}", field:"${column.name}", arrayRule:${column.editorOptions[0]} }}'>${column.comment}</th>
+						<th field="${column.name}" width="50" editor='{type:"arrayDialog", options:{table:"${tablename}", field:"${column.name}", arrayRule:${column.editorOptions[0]} }}'>${column.comment}</th>
 					</c:when>
 					<c:when test='${column.editorType=="Foreign"}'>
 						<th field="${column.name}" width="50" editor="{type:'tableDialog', options:{table:'${tablename}', field:'${column.name}', openTable:'${column.editorOptions[0]}', openTableField:'${column.editorOptions[1]}'}}">${column.comment}</th>

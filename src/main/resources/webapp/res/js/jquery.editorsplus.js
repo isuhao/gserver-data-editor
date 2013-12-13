@@ -107,6 +107,7 @@
 						width : 718,
 						height : 344,
 						minimizable : false,
+						maximizable : false,
 						collapsible : false,
 						modal : true,
 						title : field,
@@ -133,8 +134,11 @@
 			init : function(container, options) {
 				var field = options.field;
 				var input = $('<input type="text" class="datagrid-editable-input" readonly="true">').click(function() {
-					$('#' + options.divId).arrayeditor({
-						divId : options.divId,
+					var $window = $.fn.datagrid.defaults.editors.arrayDialog.static_window;
+					if ($window) {
+						$window.remove();
+					}
+					$window = $('<div>').appendTo($(this).parent()).arrayeditor({
 						inputTarget : $(this),
 						arrayRule : options.arrayRule,
 						table : options.table,
@@ -142,6 +146,7 @@
 						parentDg : $('#dg'),
 						parentEditIndex : $('#dg').edatagrid('getClickIndex')
 					});
+					$.fn.datagrid.defaults.editors.arrayDialog.static_window = $window;
 				}).appendTo(container);
 				return input;
 			},

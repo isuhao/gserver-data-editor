@@ -68,7 +68,8 @@
 			}
 		}
 
-		var $dialogDiv = $('#' + opts.divId).empty().append($('<table id="' + opts.dialogTableId + '"></table>'));
+		var $dialogTable = $('<table>');
+		var $dialogDiv = $('#' + opts.divId).empty().append($dialogTable);
 
 		(function createTable(oldValue) {
 			var colGroups = function() {
@@ -108,7 +109,6 @@
 									editor = {
 										type : 'tableDialog',
 										options : {
-											divId : 'popTableWin',
 											table : colInfo[i].toTableName,
 											field : colInfo[i].toPos,
 											openTable : colInfo[i].toTableName,
@@ -177,7 +177,6 @@
 				return datArray;
 			}(oldValue, arrayRule);
 
-			var $dialogTable = $('#' + opts.dialogTableId);
 			$dialogTable.datagrid({
 				columns : colGroups,
 				singleSelect : true,
@@ -233,6 +232,12 @@
 						// 还原表格内容的同时，还要讲父层那个输入框的内容还原
 						$dialogTable.datagrid('rejectChanges');
 						opts.inputJq.val(opts.earliestValue);
+						$.messager.show({
+							title : '设置成功',
+							msg : '数组值还原成功，录入值：' + opts.earliestValue + '。',
+							timeout : 2500,
+							showType : 'slide'
+						});
 					}
 				}, '-', {
 					text : '预览结果',
@@ -247,6 +252,12 @@
 					handler : function() {
 						var finalStrValue = _generateValue();
 						opts.inputJq.val(finalStrValue);
+						$.messager.show({
+							title : '设置成功',
+							msg : '数组值设置成功，录入值：' + finalStrValue + '。',
+							timeout : 2500,
+							showType : 'slide'
+						});
 					}
 				}]
 			});

@@ -96,14 +96,14 @@
 				var field = options.field;
 				// 先放一个text，点击这个text的时候，触发事件，生成弹出框。弹出层是模态窗口，保证关窗口前不会再次触发text的click事件。
 				var input = $('<input type="text" class="datagrid-editable-input" readonly="true">').click(function() {
-					//同页面，tableDialog只能弹出一个，公用原型中的static_targetInput
-					$.fn.datagrid.defaults.editors.tableDialog.static_targetInput = $(this);
 					var url = '../' + options.openTable + '/popopen?relatedfield=' + options.openTableField + '&table=' + options.table + '&field=' + field;
 					//只能有一个$window
 					var $window = $.fn.datagrid.defaults.editors.tableDialog.static_window;
 					if ($window) {
 						$window.remove();
 					}
+					//同页面，tableDialog只能弹出一个，公用原型中的static_targetInput
+					$.fn.datagrid.defaults.editors.tableDialog.static_targetInput = $(this);
 					$window = $('<div>').appendTo($(this).parent()).window({
 						width : 718,
 						height : 344,
@@ -132,19 +132,16 @@
 		},
 		arrayDialog : {
 			init : function(container, options) {
-				var arrayRule = options.arrayRule;
-				var table = options.table;
 				var field = options.field;
 				var inputId = 'arrayDialogInput_' + field;
 				var input = $('<input id="' + inputId + '" type="text" class="datagrid-editable-input" readonly="true">').click(function() {
 					$('#' + options.divId).arrayeditor({
 						divId : options.divId,
 						inputJq : $('#' + inputId),
-						arrayRule : arrayRule,
-						table : table,
+						arrayRule : options.arrayRule,
+						table : options.table,
 						field : field,
 						parentDg : $('#dg'),
-						dialogTableId : options.dialogTableId,
 						parentEditIndex : $('#dg').edatagrid('getClickIndex')
 					});
 				}).appendTo(container);

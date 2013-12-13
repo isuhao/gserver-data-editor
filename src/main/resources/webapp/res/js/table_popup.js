@@ -7,7 +7,7 @@ function setVal(newVal) {
 	getInputJq().val(newVal);
 	$.messager.show({
 			title : '关联成功',
-			msg : '关联成功，录入值：' + newVal + '，',
+			msg : '关联成功，录入值：' + newVal + '。',
 			timeout : 2500,
 			showType : 'slide'
 		});
@@ -27,7 +27,7 @@ function relateRow(chooseField) {
 		getInputJq().val(newVal);
 		$.messager.show({
 			title : '关联成功',
-			msg : '关联成功，录入值：' + newVal + '，',
+			msg : '关联成功，录入值：' + newVal + '。',
 			timeout : 2500,
 			showType : 'slide'
 		});

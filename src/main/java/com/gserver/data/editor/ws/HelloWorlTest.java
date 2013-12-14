@@ -2,42 +2,39 @@ package com.gserver.data.editor.ws;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
 import org.junit.Assert;
-import org.junit.Before;
-import org.junit.Test;
 
 import com.gserver.data.editor.entity.Talent;
 
+
 public class HelloWorlTest {
 
-	private JaxWsProxyFactoryBean factory;
-	private Talent talent;
+	private static JaxWsProxyFactoryBean factory;
 
-	@Before
-	public void setUp() throws Exception {
-		factory = new JaxWsProxyFactoryBean();
-		talent = new Talent();
-		talent.setName("talent");
+	public static void main(String[] args) throws Exception {
+		setUp();
+		testGetTalent();
+		testSetTalent();
 	}
 
-	@Test
-	public void testRegister() {
+	public static void setUp() throws Exception {
+		factory = new JaxWsProxyFactoryBean();
 		factory.setServiceClass(HelloWorld.class);
 		factory.setAddress("http://localhost:8080/ws/HelloWorld");
+	}
+
+	public static void testGetTalent() {
 		HelloWorld service = (HelloWorld) factory.create();
 		Talent talent = service.getTalent("talent");
-		Assert.assertEquals("talent", talent.getName());
+		System.out.println("talent".equals(talent.getName()));
 	}
 
-	@Test
-	public void testBatchRegister() {
-		factory.setServiceClass(HelloWorld.class);
-		factory.setAddress("http://localhost:8080/ws/HelloWorld");
+	public static void testSetTalent() {
 		HelloWorld service = (HelloWorld) factory.create();
 		// 以上语句的功能 可以通过spring来实现
 		Talent talent = new Talent();
 		talent.setName("talent");
 
 		String result = service.setTalent(talent);
-		Assert.assertEquals("ok", result);
+		System.out.println("ok".equals(result));
 	}
 }

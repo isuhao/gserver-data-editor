@@ -25,19 +25,19 @@ $(function() {
         }
 	});
 	String.prototype.startWith=function(s){
-		  if(s==null||s==""||this.length==0||s.length>this.length)
-		   return false;
-		  if(this.substr(0,s.length)==s)
-		     return true;
-		  else
-		     return false;
-		  return true;
-		 };
+		if(s===undefined||s===null||s===""||this.length===0||s.length>this.length)
+			return false;
+		if(this.substr(0,s.length)===s)
+			return true;
+		else
+			return false;
+	};
 		
 	$('#tt').tabs({
 		onSelect : function(table) {
-			var currTab = $('#tt').tabs('getTab', table);
-			$('#tt').tabs('update', {
+			var self = $(this);
+			var currTab = self.tabs('getTab', table);
+			self.tabs('update', {
 				tab : currTab,
 				options : {
 					content : createFrame(table + '/open')
@@ -52,12 +52,17 @@ $(function() {
 		}
 	});
 });
-
+/**
+ * 打开一个表
+ * 
+ * @param table 表的数据库名
+ */
 function open1(table) {
-	if ($('#tt').tabs('exists', table)) {
-		$('#tt').tabs('select', table);
+	var $tt = $('#tt');
+	if ($tt.tabs('exists', table)) {
+		$tt.tabs('select', table);
 	} else {
-		$('#tt').tabs('add', {
+		$tt.tabs('add', {
 			title : table,
 			closable : true,
 		});

@@ -1,9 +1,15 @@
-function generateRaletedOptions(openTable, relatedField) {
-	var relatedEditor = $('#dg').edatagrid('getEditor', {
-		index : $('#dg').edatagrid('getClickIndex'),
-		field : relatedField
-	});
+/**
+ * 关联combobox的option选项生成
+ * 
+ * @param openTable 编辑的表名
+ * @param reloadField 需要重载入的字段名
+ */
+function reloadOptions(openTable, reloadField) {
 	var url = '../' + openTable + '/columns';
-	
-	relatedEditor.target.combobox('reload', url);
+	var $edg = $('#dg');
+	var targetEditor = $edg.edatagrid('getEditor', {
+		index : $edg.edatagrid('getClickIndex'),
+		field : reloadField
+	});
+	targetEditor.target.combobox('reload', url);
 }

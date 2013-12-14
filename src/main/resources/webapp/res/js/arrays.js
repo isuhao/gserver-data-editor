@@ -1,6 +1,16 @@
+/**
+ * arrayeditor
+ * 
+ * 数组编辑器
+ * 
+ * Dependencies:
+ *   datagrid
+ *   messager
+ *   tableWindow
+ */
 (function($) {
 	$.fn.arrayeditor = function(options, param) {
-		if ( typeof options == 'string') {
+		if ( typeof options === 'string') {
 			var method = $.fn.arrayeditor.methods[options];
 			if (method) {
 				return method(this, param);
@@ -29,7 +39,7 @@
 
 	function buildEditor(target) {
 		var opts = $.data(target, 'arrayeditor').options;
-		opts.earliestValue = opts.inputJq.val();
+		opts.earliestValue = opts.inputTarget.val();
 		var arrayRule = opts.arrayRule;
 		for (var keyField in arrayRule) {
 			for (var keyPossibleValue in arrayRule[keyField]) {
@@ -58,10 +68,10 @@
 			}
 		}
 
-		var $dialogDiv = $('#' + opts.divId).empty().append($('<table id="' + opts.dialogTableId + '"></table>'));
+		var $dialogTable = $('<table>');
+		var $dialogDiv = $(target).empty().append($dialogTable);
 
-		createTable(opts.inputJq.val());
-		function createTable(oldValue) {
+		(function createTable(oldValue) {
 			var colGroups = function() {
 				var colGroups = [];
 				var cols = [];
@@ -80,10 +90,10 @@
 						} catch (e) {// TypeError
 							editor = undefined;
 						}
-						if (!editor) {
+						if (!editor) { // 这种情况因为：控制列是不可编辑的，或者控制列的editor尚未初始化，从原始数据中取值。
 							var row = $parentDg.datagrid('getRows')[clickIndex];
 							value = row[field];
-						} else {
+						} else { // 如果能取到editor，必须从editor取用户输入的新值
 							value = editor.actions.getValue(editor.target);
 						}
 						if (value === undefined)
@@ -97,9 +107,8 @@
 								var editor;
 								if (colInfo[i].toTableName) {
 									editor = {
-										type : 'tableWindow',
+										type : 'tableDialog',
 										options : {
-											divId : 'popTableWin',
 											table : colInfo[i].toTableName,
 											field : colInfo[i].toPos,
 											openTable : colInfo[i].toTableName,
@@ -122,10 +131,10 @@
 						}
 					}
 				});
-				if (cols.length == 0) {// 说明前面的控制字段填写错误，可以出个警告
+				if (cols.length === 0) {// 说明前面的控制字段填写错误，可以出个警告
 					$.messager.show({
-						title : '控制字段值非法',
-						msg : "无法生成数组元素标题，您输入的控制字段值可能错误！",
+						title : '未找到数组列标题',
+						msg : "无法生成数组元素标题，未配置此数组，或者您输入了错误的控制字段值！",
 						timeout : 5000,
 						showType : 'slide'
 					});
@@ -144,13 +153,13 @@
 			}();
 			var data = function(oldValue, arrayRule) {
 				var datArray = [];
-				if (oldValue != '') {
+				if (oldValue !== '') {
 					var titleLength = colGroups[0].length;
 					// 不可能为0，前面至少放了一列
 					var splitarray = oldValue.split(',');
 					if (splitarray.length % titleLength) {
 						$.messager.show({
-							title : '原输入数组长度',
+							title : '原输入和数组列数不匹配',
 							msg : "原输入数组长度，不是列的整数倍，表格后面补了" + (titleLength - splitarray.length % titleLength) + "个空单元格！",
 							timeout : 5000,
 							showType : 'slide'
@@ -158,7 +167,7 @@
 					}
 					var datium;
 					for (var i = 0; i < splitarray.length; ++i) {
-						if (i % titleLength == 0) {
+						if (i % titleLength === 0) {
 							datium = {};
 							datArray.push(datium);
 						}
@@ -168,14 +177,13 @@
 				return datArray;
 			}(oldValue, arrayRule);
 
-			var $dialogTable = $('#' + opts.dialogTableId);
 			$dialogTable.datagrid({
 				columns : colGroups,
 				singleSelect : true,
 				data : data,
 				rownumbers : true,
 				fitColumns : false,
-
+				fit : true,
 				onClickCell : function(index, field, value) {
 					var lastIndex = $(this).datagrid('getRowIndex', $(this).datagrid('getSelected'));
 					if (lastIndex !== undefined && lastIndex >= 0) {
@@ -212,7 +220,7 @@
 					iconCls : 'icon-remove',
 					handler : function() {
 						var editIndex = $dialogTable.datagrid('getRowIndex', $dialogTable.datagrid('getSelected'));
-						if (editIndex == undefined) {
+						if (editIndex === -1) {
 							return;
 						}
 						$dialogTable.datagrid('cancelEdit', editIndex).datagrid('deleteRow', editIndex);
@@ -223,7 +231,13 @@
 					handler : function() {
 						// 还原表格内容的同时，还要讲父层那个输入框的内容还原
 						$dialogTable.datagrid('rejectChanges');
-						opts.inputJq.val(opts.earliestValue);
+						opts.inputTarget.val(opts.earliestValue);
+						$.messager.show({
+							title : '设置成功',
+							msg : '数组值还原成功，录入值：' + opts.earliestValue + '。',
+							timeout : 2500,
+							showType : 'slide'
+						});
 					}
 				}, '-', {
 					text : '预览结果',
@@ -237,7 +251,13 @@
 					iconCls : 'icon-ok',
 					handler : function() {
 						var finalStrValue = _generateValue();
-						opts.inputJq.val(finalStrValue);
+						opts.inputTarget.val(finalStrValue);
+						$.messager.show({
+							title : '设置成功',
+							msg : '数组值设置成功，录入值：' + finalStrValue + '。',
+							timeout : 2500,
+							showType : 'slide'
+						});
 					}
 				}]
 			});
@@ -262,7 +282,7 @@
 				return finalStr;
 			}
 
-		}
+		}(opts.inputTarget.val()));
 
 		$dialogDiv.dialog({
 			title : '数组编辑器',
@@ -281,7 +301,11 @@
 		/**
 		 *请求约束关系表的url 
 		 */
-		constraintUrl : '../_tt_constraint/find'
+		constraintUrl : '../_tt_constraint/find',
+		/**
+		 * 转为弹出层元素的选择器
+		 */
+		popDialogJq : undefined
 	});
 
 })(jQuery);

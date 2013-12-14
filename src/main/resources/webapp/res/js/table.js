@@ -3,24 +3,46 @@ $(function() {
 		url : 'loaddata',
 		saveUrl : 'save',
 		updateUrl : 'update',
-		destroyUrl : 'delete'
+		destroyUrl : 'delete',
+		onError: function(index, data){
+			if (data.errorMsg) {
+				$.messager.alert('失败', data.errorMsg, 'error');
+			} else {
+				$.messager.alert('失败', "服务器返回了错误的结果，请刷新数据！", 'error');
+			}
+		}
 	});
 });
-
+/**
+ * 执行搜索
+ * 
+ * @param value 关键词
+ * @param name 搜索条件（为'all'时表示不过滤）
+ */
 function doSearch(value, name) {
-	if (name == 'all') {
-		$('#tableSearchBox').searchbox('setValue', '');
-		$('#dg').edatagrid('load', {});
+	// @
+	var $edg = $('#dg');
+	var $searchBox = $('#tableSearchBox');
+	var _all = 'all';
+	//
+	var param = {};
+	if (name === _all) {
+		$searchBox.searchbox('setValue', '');
 	} else {
-		var param = {};
 		param[String(name)] = value;
-		$('#dg').edatagrid('load', param);
 	}
+	$edg.edatagrid('load', param);
 }
 
+/**
+ * 锁表函数
+ * 
+ * @param obj DOM按钮
+ */
 function lockTable(obj) {
-	$.post("./lockTable", {}, function(data) {
-		if (data=='OK') {
+	var postUrl = "./lockTable";
+	$.post(postUrl, {}, function(data) {
+		if (data==='OK') {
 			$(obj).removeAttr('onclick').unbind('click').bind('click', function() {
 				unLockTable(obj);
 			});
@@ -36,10 +58,15 @@ function lockTable(obj) {
 		}
 	});
 }
-
+/**
+ * 解表函数
+ * 
+ * @param obj DOM按钮
+ */
 function unLockTable(obj) {
-	$.post("./unLockTable", {}, function(data) {
-		if (data=='OK') {
+	var postUrl = "./unLockTable";
+	$.post(postUrl, {}, function(data) {
+		if (data==='OK') {
 			$(obj).removeAttr('onclick').unbind('click').bind('click', function() {
 				lockTable(obj);
 			});
@@ -55,7 +82,9 @@ function unLockTable(obj) {
 		}
 	});
 }
-
+/**
+ * 导出txt函数
+ */
 function exportTxt() {
 	window.location.href="./download";
 }

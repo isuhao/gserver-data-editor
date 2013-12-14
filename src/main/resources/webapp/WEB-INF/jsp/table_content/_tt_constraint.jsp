@@ -1,5 +1,5 @@
 <%@ page language="java" import="java.util.*" pageEncoding="utf-8"%>
-<table id="dg" title="数据表格" style="width:1000px;height:364px" toolbar="#toolbar" pagination="true" idField="id" rownumbers="true" fitColumns="true" singleSelect="true">
+<table id="dg" title="数据表格" style="width:1000px;height:364px" toolbar="#toolbar" pagination="true" idField="code" rownumbers="true" fitColumns="true" singleSelect="true">
 	<thead>
 		<tr>
 			<th field="${columns[0].name}" width="50">${columns[0].comment}</th>
@@ -12,7 +12,7 @@
                                 url:'../getTables',
                                 required : true,
                                 onSelect : function(titlePair) {
-                                	generateRaletedOptions(titlePair[0], '${columns[2].name}');
+                                	reloadOptions(titlePair[0], '${columns[2].name}');
                                 }
                             }
                         }">${columns[1].comment}</th>
@@ -26,7 +26,7 @@
                                 url:'../getTables',
                                 required : true,
                                 onSelect : function(titlePair) {
-                                	generateRaletedOptions(titlePair[0], '${columns[4].name}');
+                                	reloadOptions(titlePair[0], '${columns[4].name}');
                                 }
                             }
                         }">${columns[3].comment}</th>

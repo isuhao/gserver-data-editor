@@ -13,7 +13,7 @@
 	<body>
 		<table id="pdg" title="" class="easyui-datagrid" style="width:700px;height:308px"
 		url="../${tablename}/loaddata" toolbar="#poptoolbar" pagination="true"
-		rownumbers="true" fitColumns="true" singleSelect="true">
+		rownumbers="true" fitColumns="true" fit="true" singleSelect="true">
 			<thead>
 				<tr>
 					<c:forEach var="column" items="${columns}">
@@ -23,13 +23,9 @@
 			</thead>
 		</table>
 		<div id="poptoolbar">
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="setVal()">设为此行关联值</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-mini-edit" plain="true" onclick="setDefault()">设为缺省值</a>
-			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-help" plain="true" onclick="display('1')">录入统计</a>
-		</div>
-		<div style="visibility: hidden">
-			<input type="hidden" id="pdg_field" value="${relatedfield}"/>
-			<input type="hidden" id="dg_default" value="${defaultliteral}"/>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-ok" plain="true" onclick="javascript:relateRow('${relatedfield}');">设为此行关联值</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-mini-edit" plain="true" onclick="javascript:setVal('${defaultliteral}');">设为缺省值</a>
+			<a href="javascript:void(0)" class="easyui-linkbutton" iconCls="icon-help" plain="true" onclick="javascript:display();">录入统计</a>
 		</div>
 	</body>
 </html>

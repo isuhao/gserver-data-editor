@@ -1,7 +1,6 @@
 package com.gserver.data.editor.ws;
 
 import org.apache.cxf.jaxws.JaxWsProxyFactoryBean;
-import org.junit.Assert;
 
 import com.gserver.data.editor.entity.Talent;
 
@@ -30,7 +29,6 @@ public class HelloWorlTest {
 
 	public static void testSetTalent() {
 		HelloWorld service = (HelloWorld) factory.create();
-		// 以上语句的功能 可以通过spring来实现
 		Talent talent = new Talent();
 		talent.setName("talent");
 

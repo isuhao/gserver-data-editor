@@ -7,7 +7,7 @@
 		The JSP compilation phase will merge in the JSP servlet configuration
 		somewhere around here.
 	-->
-	<display-name>Test WebApp</display-name>
+	<display-name>Game Data Editor WebApp</display-name>
 
 
 	<!-- 编码过滤  -->
@@ -24,6 +24,17 @@
 		<url-pattern>/*</url-pattern>
 	</filter-mapping>
 
+
+	<!-- cxf WebService服务 -->
+	<servlet>
+		<servlet-name>cxf</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>cxf</servlet-name>
+		<url-pattern>/ws/*</url-pattern>
+	</servlet-mapping>
 
 	<!-- 出错页面定义 -->
 	<error-page>

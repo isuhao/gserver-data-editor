@@ -1,8 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd">
+	xmlns:jaxws="http://cxf.apache.org/jaxws" xmlns="http://www.springframework.org/schema/beans"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.2.xsd http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd">
 
-  <!-- XML based root application context. -->
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+
+	<jaxws:endpoint id="helloworld"
+		implementor="com.gserver.data.editor.ws.HelloWorldImpl"
+		address="/HelloWorld" />
+
+	<!-- For client test -->
+	<jaxws:client id="helloworldClient" address="http://localhost:8080/ws/HelloWorld"
+		serviceClass="com.gserver.data.editor.ws.HelloWorld" />
 
 </beans>

@@ -13,6 +13,7 @@ import javax.persistence.Column;
 import javax.persistence.Table;
 
 import org.apache.commons.beanutils.PropertyUtils;
+import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +23,6 @@ import org.springframework.stereotype.Service;
 import com.alibaba.fastjson.JSON;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
-import com.google.common.collect.Sets;
 import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.annotation.ArrayData;
 import com.gserver.data.editor.annotation.Comment;
@@ -225,12 +225,8 @@ public class TablesServiceImpl implements TablesService {
 		return list;
 	}
 
-	public Set<String> getKeyOptions(String tableName, String field) {
-		List<ArrayRule> alist = tablesDao.getAll(ArrayRule.class, Restrictions.eq("tableName", tableName), Restrictions.eq("keyField", field));
-		Set<String> set = Sets.newTreeSet();
-		for (ArrayRule one : alist) {
-			set.add(one.getKeyValue());
-		}
-		return set;
+	public List<String> getKeyOptions(String tableName, String field) {
+		List<String> list = tablesDao.getAll(ArrayRule.class, Projections.property("keyValue"),Restrictions.eq("tableName", tableName), Restrictions.eq("keyField", field));
+		return list;
 	}
 }

@@ -197,11 +197,10 @@
 						inputTarget : $(this),
 						arrayRule : options.arrayRule,
 						table : options.table,
-						// 以下三行是为了得到数组控制字段的值。因为此editor生成时不知道控制字段的值是什么，
-						// 只能传datagrid和编辑的行，生成弹出时再去动态查询。
+						// 以下二行是为了得到数组控制字段的值。因为此editor生成时不知道控制字段的值是什么，
+						// 只能传datagrid，利用当前的editIndex，实时生成弹出时再去动态查询。
 						field : field,
 						parentDg : $(options.containerDg),
-						parentEditIndex : $(options.containerDg).edatagrid('getClickIndex')
 					});
 					$.fn.datagrid.defaults.editors.arrayDialog.static_window = $window;
 				}).appendTo(container);

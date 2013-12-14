@@ -41,14 +41,12 @@
 		var opts = $.data(target, 'edatagrid').options;
 		$(target).datagrid($.extend({}, opts, {
 			onDblClickCell:function(index,field){
-				opts.clickIndex = index;
 				if (opts.editing){
 					$(this).edatagrid('editRow', index);
 					focusEditor(field);
 				}
 			},
 			onClickCell:function(index,field){
-				opts.clickIndex = index;
 				if (opts.editing && opts.editIndex >= 0){
 					$(this).edatagrid('editRow', index);
 					focusEditor(field);
@@ -356,11 +354,6 @@
 					}
 				});
 			});
-		},
-		getClickIndex : function(jq) {
-			// 还不太明白为啥别的方法都用的jq.each
-			var opts = $.data(jq[0], 'edatagrid').options;
-			return opts.clickIndex;
 		}
 	};
 	

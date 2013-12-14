@@ -8,7 +8,7 @@ function reloadOptions(openTable, reloadField) {
 	var url = '../' + openTable + '/columns';
 	var $edg = $('#dg');
 	var targetEditor = $edg.edatagrid('getEditor', {
-		index : $edg.edatagrid('getClickIndex'),
+		index : $edg.edatagrid('options').editIndex,
 		field : reloadField
 	});
 	targetEditor.target.combobox('reload', url);

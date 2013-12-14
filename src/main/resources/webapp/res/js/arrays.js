@@ -78,27 +78,18 @@
 				var arrayRule = opts.arrayRule;
 				$.each(arrayRule, function(field, i) {
 					var keyValue = function(field) {
-						var clickIndex = opts.parentEditIndex;
 						var $parentDg = opts.parentDg;
-						var value = '';
-						var editor;
-						try {
-							editor = $parentDg.datagrid('getEditor', {
-								index : clickIndex,
+						var	parentEditIndex = $parentDg.edatagrid('options').editIndex;
+						var	editor = $parentDg.datagrid('getEditor', {
+								index : parentEditIndex,
 								field : field
 							});
-						} catch (e) {// TypeError
-							editor = undefined;
-						}
-						if (!editor) { // 这种情况因为：控制列是不可编辑的，或者控制列的editor尚未初始化，从原始数据中取值。
-							var row = $parentDg.datagrid('getRows')[clickIndex];
-							value = row[field];
+						if (!editor) { // 这种情况因为：控制列是不可编辑的例如NoEditor，或者控制列的editor尚未初始化，从原始数据中取值。
+							var row = $parentDg.datagrid('getRows')[parentEditIndex];
+							return row[field];
 						} else { // 如果能取到editor，必须从editor取用户输入的新值
-							value = editor.actions.getValue(editor.target);
+							return editor.actions.getValue(editor.target);
 						}
-						if (value === undefined)
-							value = '';
-						return value;
 					}(field);
 					if (arrayRule[field] !== undefined) {
 						var colInfo = arrayRule[field][String(keyValue)];
@@ -234,7 +225,7 @@
 						opts.inputTarget.val(opts.earliestValue);
 						$.messager.show({
 							title : '设置成功',
-							msg : '数组值还原成功，录入值：' + opts.earliestValue + '。',
+							msg : '数组值还原成功，录入值：' + opts.earliestValue,
 							timeout : 2500,
 							showType : 'slide'
 						});
@@ -254,7 +245,7 @@
 						opts.inputTarget.val(finalStrValue);
 						$.messager.show({
 							title : '设置成功',
-							msg : '数组值设置成功，录入值：' + finalStrValue + '。',
+							msg : '数组值设置成功，录入值：' + finalStrValue,
 							timeout : 2500,
 							showType : 'slide'
 						});

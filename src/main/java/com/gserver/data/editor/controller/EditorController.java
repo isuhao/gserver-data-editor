@@ -117,7 +117,6 @@ public class EditorController {
 	public Map<String, Object> saveRow(Model model, @PathVariable TableEntity table){
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
 		tablesService.insertData(table);
-		map.put("success", true);
 		map.put("code", table.getCode());
 		return map;
 	}
@@ -135,7 +134,6 @@ public class EditorController {
 	public Map<String, Object> updateRow(Model model, @PathVariable TableEntity table) {
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
 		tablesService.updateData(table);
-		map.put("success", true);
 		map.put("code", table.getCode());
 		return map;
 	}
@@ -145,25 +143,26 @@ public class EditorController {
 	 * 
 	 * @param model
 	 * @param tablename
-	 * @param code
+	 * @param id
 	 * @return
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/{tablename}/delete", method = { RequestMethod.POST })
-	public Map<String, Object> deleteRow(Model model, @PathVariable String tablename, @RequestParam(required = true) Long code) {
+	public Map<String, Object> deleteRow(Model model, @PathVariable String tablename, @RequestParam(required = true) Long id) {
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
-		if (code != null) {
+		if (id != null) {
 			Class<TableEntity> beanClass = EntityUtils.getMappedClass(tablename);
-			TableEntity t = tablesService.getDataById(beanClass, code);
+			TableEntity t = tablesService.getDataById(beanClass, id);
 			// // 验证关联，考虑数组的情况。
 			boolean isDeletable = tablesService.isDeletable(tablename, t);
 			if (isDeletable) {
 				tablesService.deleteDataById(beanClass, t.getCode());
-				map.put("success", true);
+				map.put("isError", false);
 				return map;
 			}
 		}
-		map.put("success", false);
+		map.put("isError", true);
+		map.put("errorMsg", "存在关联，不能删除！");
 		return map;
 	}
 

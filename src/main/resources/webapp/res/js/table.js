@@ -3,7 +3,14 @@ $(function() {
 		url : 'loaddata',
 		saveUrl : 'save',
 		updateUrl : 'update',
-		destroyUrl : 'delete'
+		destroyUrl : 'delete',
+		onError: function(index, data){
+			if (data.errorMsg) {
+				$.messager.alert('失败', data.errorMsg, 'error');
+			} else {
+				$.messager.alert('失败', "服务器返回了错误的结果，请刷新数据！", 'error');
+			}
+		}
 	});
 });
 /**

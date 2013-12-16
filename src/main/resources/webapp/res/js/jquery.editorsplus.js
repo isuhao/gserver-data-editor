@@ -182,6 +182,7 @@
 		 * 
 		 * 依赖：
 		 * jquery.edatagrid.js
+		 * jquery.arrays.js
 		 * tableDialog
 		 * table_popup.jsp
 	     */
@@ -200,7 +201,7 @@
 						// 以下二行是为了得到数组控制字段的值。因为此editor生成时不知道控制字段的值是什么，
 						// 只能传datagrid，利用当前的editIndex，实时生成弹出时再去动态查询。
 						field : field,
-						parentDg : $(options.containerDg),
+						parentDg : $(options.containerDg)
 					});
 					$.fn.datagrid.defaults.editors.arrayDialog.static_window = $window;
 				}).appendTo(container);

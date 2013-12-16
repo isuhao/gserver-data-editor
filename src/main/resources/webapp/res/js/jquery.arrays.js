@@ -1,5 +1,5 @@
 /**
- * arrayeditor
+ * arrays
  * 
  * 数组编辑器
  * 
@@ -30,21 +30,15 @@
 		});
 	};
 
-	$.fn.arrayeditor.methods = {
-		options : function(jq) {
-			var opts = $.data(jq[0], 'arrayeditor').options;
-			return opts;
-		},
-	};
-
 	function buildEditor(target) {
 		var opts = $.data(target, 'arrayeditor').options;
 		opts.earliestValue = opts.inputTarget.val();
 		var arrayRule = opts.arrayRule;
-		for (var keyField in arrayRule) {
-			for (var keyPossibleValue in arrayRule[keyField]) {
+		for (var keyField in arrayRule) if (arrayRule.hasOwnProperty(keyField)) {
+			var oneArrayRule = arrayRule[keyField];
+			for (var keyPossibleValue in oneArrayRule) if (oneArrayRule.hasOwnProperty(keyPossibleValue)) {
 				var titlesArray = arrayRule[keyField][keyPossibleValue];
-				for (var i = 0; i < titlesArray.length; ++i) {
+				for (var i = titlesArray.length; i--; ) {
 					var titleRule = titlesArray[i];
 					if (titleRule && titleRule.constraint_id && titleRule.constraint_id > 0) {
 						$.ajax({
@@ -94,7 +88,7 @@
 					if (arrayRule[field] !== undefined) {
 						var colInfo = arrayRule[field][String(keyValue)];
 						if (colInfo) {
-							for (var i = 0; i < colInfo.length; ++i) {
+							for (var i = colInfo.length; i--; ) {
 								var editor;
 								if (colInfo[i].toTableName) {
 									editor = {
@@ -117,7 +111,7 @@
 									width : 80,
 									editor : editor
 								};
-								cols.push(oneCol);
+								cols.unshift(oneCol);
 							}
 						}
 					}
@@ -142,7 +136,7 @@
 				colGroups.push(cols);
 				return colGroups;
 			}();
-			var data = function(oldValue, arrayRule) {
+			var data = (function(oldValue, arrayRule) {
 				var datArray = [];
 				if (oldValue !== '') {
 					var titleLength = colGroups[0].length;
@@ -159,15 +153,18 @@
 					var datium;
 					for (var i = 0; i < splitarray.length; ++i) {
 						if (i % titleLength === 0) {
+							// init new row
 							datium = {};
+							for (var j = titleLength; j--;) {
+								datium["idx_" + (j + 1)] = '';
+							}
 							datArray.push(datium);
 						}
 						datium["idx_" + ((i % titleLength) + 1)] = splitarray[i];
 					}
 				}
 				return datArray;
-			}(oldValue, arrayRule);
-
+			})(oldValue, arrayRule);
 			$dialogTable.datagrid({
 				columns : colGroups,
 				singleSelect : true,
@@ -263,11 +260,16 @@
 				}
 				var rows = $dialogTable.datagrid('getRows');
 				var strRows = $.map(rows, function(row) {
-					var arr = [];
-					for (var idx in row) {
-						arr.push(row[idx]);
+					var arrKey = [],
+						arrVal = [];
+					for (var idx in row) if (row.hasOwnProperty(idx)) {
+						arrKey.push(idx);
 					}
-					return arr.join(',');
+					arrKey.sort();
+					for (var i = arrKey.length; i--; ) {
+						arrVal.unshift(row[arrKey[i]]);
+					}
+					return arrVal.join(',');
 				});
 				var finalStr = strRows.join(',');
 				return finalStr;
@@ -292,11 +294,7 @@
 		/**
 		 *请求约束关系表的url 
 		 */
-		constraintUrl : '../_tt_constraint/find',
-		/**
-		 * 转为弹出层元素的选择器
-		 */
-		popDialogJq : undefined
+		constraintUrl : '../_tt_constraint/find'
 	});
 
 })(jQuery);

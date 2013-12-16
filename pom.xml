@@ -24,7 +24,6 @@
 		<javax.servlet.version>3.1.0</javax.servlet.version>
 		<jstl.version>1.2</jstl.version>
 		<jsp-api.version>2.2</jsp-api.version>
-		<junit.version>4.11</junit.version>
 		<spring-data-jpa.version>1.4.2.RELEASE</spring-data-jpa.version>
 		<commons-lang3.version>3.1</commons-lang3.version>
 		<fastjson.version>1.1.37</fastjson.version>
@@ -33,6 +32,9 @@
 		<aspectjweaver.version>1.7.4</aspectjweaver.version>
 		<log4jdbc.version>1.2</log4jdbc.version>
 		<org.apache.cxf.version>2.7.8</org.apache.cxf.version>
+		<ehcache.version>2.7.4</ehcache.version>
+		<javamelody-core.version>1.48.0</javamelody-core.version>
+		<junit.version>4.11</junit.version>
 	</properties>
 
 	<repositories>
@@ -247,9 +249,17 @@
 		<dependency>
 			<groupId>net.sf.ehcache</groupId>
 			<artifactId>ehcache</artifactId>
-			<version>2.7.4</version>
+			<version>${ehcache.version}</version>
 		</dependency>
+
+		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-core</artifactId>
+			<version>${javamelody-core.version}</version>
+		</dependency>
+
 	</dependencies>
+
 
 	<build>
 		<finalName>server</finalName>

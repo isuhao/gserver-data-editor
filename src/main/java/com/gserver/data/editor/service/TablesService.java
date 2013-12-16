@@ -92,5 +92,12 @@ public interface TablesService {
 	 * @return 数组配置表中配的，这个表这个字段的可能值集合。
 	 */
 	public List<String> getKeyOptions(String tableName, String field);
+	
+	/**
+	 * 根据表名获得对应的表格简单标题。
+	 * @param table
+	 * @return
+	 */
+	public List<TableTitle> getSimpleTitles(String table);
 
 }

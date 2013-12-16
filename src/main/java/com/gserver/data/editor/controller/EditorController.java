@@ -73,13 +73,11 @@ public class EditorController {
 	public String openTable(Model model, @PathVariable String table) {
 		model.addAttribute("tablename", table);
 		Class<TableEntity> beanClass = EntityUtils.getMappedClass(table);
-		if (beanClass != null) {
-			List<TableTitle> titles = EntityUtils.getSimpleTitles(beanClass);
-			for (TableTitle title : titles) {
-				tablesService.setEditor(title, beanClass, table, title.getName());
-			}
-			model.addAttribute("columns", titles);
+		List<TableTitle> titles = tablesService.getSimpleTitles(table);
+		for (TableTitle title : titles) {
+			tablesService.setEditor(title, beanClass, table, title.getName());
 		}
+		model.addAttribute("columns", titles);
 		model.addAttribute("lockTableIP", LockTableInterceptor.lockTableIP(table));
 		return "table";
 	}
@@ -113,7 +111,7 @@ public class EditorController {
 	 */
 	@ResponseBody
 	@RequestMapping(value = "/{table}/save", method = { RequestMethod.POST })
-	public Map<String, Object> saveRow(Model model, @PathVariable TableEntity table){
+	public Map<String, Object> saveRow(Model model, @PathVariable TableEntity table) {
 		Map<String, Object> map = Maps.newHashMapWithExpectedSize(1);
 		tablesService.insertData(table);
 		map.put("code", table.getCode());
@@ -186,11 +184,7 @@ public class EditorController {
 	@ResponseBody
 	@RequestMapping(value = "/{table}/columns", method = RequestMethod.POST)
 	public List<TableTitle> openTable(@PathVariable String table) {
-		Class<TableEntity> beanClass = EntityUtils.getMappedClass(table);
-		List<TableTitle> titles = null;
-		if (beanClass != null) {
-			titles = EntityUtils.getSimpleTitles(beanClass);
-		}
+		List<TableTitle> titles = tablesService.getSimpleTitles(table);
 		return titles;
 	}
 
@@ -215,15 +209,12 @@ public class EditorController {
 	public String openPopupTable(Model model, @PathVariable String relatedtable, @RequestParam(required = true) String relatedfield, @RequestParam(required = true) String table,
 			@RequestParam(required = true) String field) {
 		model.addAttribute("tablename", relatedtable);
-		Class<TableEntity> relatedClass = EntityUtils.getMappedClass(relatedtable);
-		if (relatedClass != null) {
-			List<TableTitle> titles = EntityUtils.getSimpleTitles(relatedClass);
-			model.addAttribute("columns", titles);
-			model.addAttribute("relatedfield", relatedfield);
-			model.addAttribute("field", field);
-			String defaultLiteral = EntityUtils.getDefaultLiteral(table, field);
-			model.addAttribute("defaultliteral", defaultLiteral);
-		}
+		List<TableTitle> titles = tablesService.getSimpleTitles(relatedtable);
+		model.addAttribute("columns", titles);
+		model.addAttribute("relatedfield", relatedfield);
+		model.addAttribute("field", field);
+		String defaultLiteral = EntityUtils.getDefaultLiteral(table, field);
+		model.addAttribute("defaultliteral", defaultLiteral);
 		return "table_popup";
 	}
 
@@ -260,7 +251,6 @@ public class EditorController {
 		return model;
 	}
 
-	
 	/**
 	 * 锁定表
 	 * 

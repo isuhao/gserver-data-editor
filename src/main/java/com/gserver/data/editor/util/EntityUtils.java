@@ -300,6 +300,9 @@ public class EntityUtils {
 			String propName = field.getName();
 			String comment = null;
 			String search = "";
+			if (field.getName().equals("serialVersionUID")) {
+				continue;
+			}
 			Comment annotation = field.getAnnotation(Comment.class);
 			if (annotation != null) {
 				comment = annotation.desc();

@@ -17,6 +17,7 @@ import org.hibernate.criterion.Projections;
 import org.hibernate.criterion.Restrictions;
 import org.hibernate.criterion.SimpleExpression;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
@@ -192,17 +193,17 @@ public class TablesServiceImpl implements TablesService {
 		return spellTitle.append(spellContent).toString();
 	}
 
+	@Cacheable(value = "andCache", key = "#packageName + 'getTreeLayer'")
 	public List<Tree> getTreeLayer(String packageName) {
 		List<Tree> list = Lists.newArrayList();
+		try {
 		if (packageName == null) {
 			String packageDesc = ClassUtils.findPackageInfo(EntityUtils.PACKAGE);
 			Tree tree = new Tree(EntityUtils.PACKAGE, packageDesc, "closed");
 			list.add(tree);
 			return list;
 		}
-		Set<String> names;
-		try {
-			names = ClassUtils.getDirectChildrenNames(packageName);
+		Set<String> names = ClassUtils.getDirectChildrenNames(packageName);
 			for (String f : names) {
 				if (f.endsWith(".class")) { // Class
 					String className = f.substring(0, f.indexOf(".class"));
@@ -224,9 +225,19 @@ public class TablesServiceImpl implements TablesService {
 		}
 		return list;
 	}
+	
+	@Cacheable(value = "andCache", key = "#table + 'getSimpleTitles'")
+	public List<TableTitle> getSimpleTitles(String table) {
+		List<TableTitle> titles = Lists.newArrayList();
+		Class<TableEntity> clazz = EntityUtils.getMappedClass(table);
+		if (clazz != null) {
+			titles = EntityUtils.getSimpleTitles(clazz);
+		}
+		return titles;
+	}
 
 	public List<String> getKeyOptions(String tableName, String field) {
-		List<String> list = tablesDao.getAll(ArrayRule.class, Projections.property("keyValue"),Restrictions.eq("tableName", tableName), Restrictions.eq("keyField", field));
+		List<String> list = tablesDao.getAll(ArrayRule.class, Projections.property("keyValue"), Restrictions.eq("tableName", tableName), Restrictions.eq("keyField", field));
 		return list;
 	}
 }

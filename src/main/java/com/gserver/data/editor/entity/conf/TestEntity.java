@@ -1,5 +1,7 @@
 package com.gserver.data.editor.entity.conf;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -14,7 +16,10 @@ import com.gserver.data.editor.annotation.Comment;
 @Entity
 @Comment(desc = "test:类型测试表")
 @Table(name = "_tt_alltypes")
-public class TestEntity implements TableEntity {
+public class TestEntity implements TableEntity , Serializable{
+
+	private static final long serialVersionUID = -4722443866200625341L;
+
 	@Id
 	@Comment(search = "search_EQ_code",desc = "id")
 	@Column(name = "code")

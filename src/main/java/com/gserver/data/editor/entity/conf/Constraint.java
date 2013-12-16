@@ -1,5 +1,7 @@
 package com.gserver.data.editor.entity.conf;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,9 @@ import com.gserver.data.editor.annotation.Comment;
 @Entity
 @Comment(desc = "conf:关联")
 @Table(name = "_tt_constraint")
-public class Constraint implements TableEntity {
+public class Constraint implements TableEntity, Serializable{
+
+	private static final long serialVersionUID = -8563972652881167365L;
 
 	@Id
 	@Comment(search = "search_EQ_code",desc = "Id")

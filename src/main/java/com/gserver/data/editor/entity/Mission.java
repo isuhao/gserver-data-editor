@@ -1,5 +1,7 @@
 package com.gserver.data.editor.entity;
 
+import java.io.Serializable;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -13,7 +15,10 @@ import com.gserver.data.editor.annotation.Comment;
 @Entity
 @Comment(desc = "任务表")
 @Table(name = "mission")
-public class Mission implements TableEntity {
+public class Mission implements TableEntity , Serializable{
+	
+	private static final long serialVersionUID = -6605646337536152059L;
+
 	@Id
 	@Comment(search = "search_EQ_code", desc = "任务id")
 	@Column(name = "code", nullable = false)

@@ -1,6 +1,9 @@
 package com.gserver.data.editor.dto;
 
-public class Tree {
+import java.io.Serializable;
+
+@SuppressWarnings("serial")
+public class Tree implements Serializable{
 
 	private String id;
 	private String text;

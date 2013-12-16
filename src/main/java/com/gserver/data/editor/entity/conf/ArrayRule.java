@@ -15,10 +15,8 @@ import com.gserver.data.editor.annotation.Comment;
 @Entity
 @Comment(desc = "conf:数组限定")
 @Table(name = "_tt_arrayrule")
+@SuppressWarnings("serial")
 public class ArrayRule implements TableEntity , Serializable{
-
-	private static final long serialVersionUID = 1799558062809432584L;
-
 	@Id
 	@Comment(search = "search_EQ_code", desc = "Id")
 	@Column(name = "code")

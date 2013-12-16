@@ -1,5 +1,6 @@
 package com.gserver.data.editor.dto;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
 import com.gserver.data.editor.util.EditorType;
@@ -8,7 +9,8 @@ import com.gserver.data.editor.util.EditorType;
  * 表标题行信息传输对象，包括客户端建立{@code datagrid}的所有必须知道的参数。
  * 
  */
-public class TableTitle {
+@SuppressWarnings("serial")
+public class TableTitle implements Serializable{
 	/**
 	 * 列对应的POJO字段名
 	 */

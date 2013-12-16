@@ -15,10 +15,8 @@ import com.gserver.data.editor.annotation.Comment;
 @Entity
 @Comment(desc = "conf:关联")
 @Table(name = "_tt_constraint")
+@SuppressWarnings("serial")
 public class Constraint implements TableEntity, Serializable{
-
-	private static final long serialVersionUID = -8563972652881167365L;
-
 	@Id
 	@Comment(search = "search_EQ_code",desc = "Id")
 	@Column(name = "code")

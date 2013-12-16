@@ -16,10 +16,8 @@ import com.gserver.data.editor.annotation.Comment;
 @Entity
 @Comment(desc = "test:类型测试表")
 @Table(name = "_tt_alltypes")
+@SuppressWarnings("serial")
 public class TestEntity implements TableEntity , Serializable{
-
-	private static final long serialVersionUID = -4722443866200625341L;
-
 	@Id
 	@Comment(search = "search_EQ_code",desc = "id")
 	@Column(name = "code")

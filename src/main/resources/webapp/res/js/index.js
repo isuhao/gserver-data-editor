@@ -2,7 +2,7 @@ $(function() {
 	$('#packageTree').tree({
 	    url:'getTree',
 	    onClick: function(node){
-	    	if (!node.state)
+		if ($(this).tree('isLeaf', node.target))
 	    		open1(node.id);
 		},
 		onContextMenu: function(e,node){

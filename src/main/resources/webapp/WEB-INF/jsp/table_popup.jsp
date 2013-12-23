@@ -6,7 +6,7 @@
 		<link rel="stylesheet" type="text/css" href="../res/easyui/themes/default/easyui.css">
 		<link rel="stylesheet" type="text/css" href="../res/easyui/themes/icon.css">
 		<link rel="stylesheet" type="text/css" href="../res/css/demo.css">
-		<script type="text/javascript" src="../res/easyui/jquery-1.8.0.min.js"></script>
+		<script type="text/javascript" src="../res/easyui/jquery.min.js"></script>
 		<script type="text/javascript" src="../res/easyui/jquery.easyui.min.js"></script>
 		<script type="text/javascript" src="../res/js/table_popup.js"></script>
 	</head>

@@ -8,7 +8,7 @@
 <title>数据表编辑器</title>
 <link rel="stylesheet" type="text/css" href="./res/easyui/themes/default/easyui.css">
 <link rel="stylesheet" type="text/css" href="./res/css/main.css">
-<script type="text/javascript" src="./res/easyui/jquery-1.8.0.min.js"></script>
+<script type="text/javascript" src="./res/easyui/jquery.min.js"></script>
 <script type="text/javascript" src="./res/easyui/jquery.easyui.min.js"></script>
 <script type="text/javascript" src="./res/js/index.js"></script>
 <link rel="stylesheet" type="text/css" href="./res/css/prettify.css">

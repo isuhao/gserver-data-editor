@@ -4,11 +4,14 @@ import java.beans.PropertyEditorSupport;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.ServletRequestDataBinder;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.InitBinder;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import com.gserver.data.editor.exception.ParameterException;
 import com.gserver.data.editor.util.EntityUtils;
@@ -29,7 +32,7 @@ public class GlobalControllerAdvice {
 			@Override
 			public void setAsText(String text) throws IllegalArgumentException {
 
-				TableEntity newInstance=EntityUtils.getEntityInstance(text);
+				TableEntity newInstance = EntityUtils.getEntityInstance(text);
 				new ServletRequestDataBinder(newInstance).bind(request);
 				setValue(newInstance);
 			}
@@ -38,19 +41,21 @@ public class GlobalControllerAdvice {
 
 	/** 基于@ExceptionHandler异常处理 */
 
-	@ExceptionHandler
-	// @ResponseBody(value = { BusinessException.class,
+	@ExceptionHandler(RuntimeException.class)
+	// @ResponseBody(value = {
 	// ParameterException.class,
 	// Exception.class})
-	public String exp(HttpServletRequest request, Exception ex) {
+	@ResponseStatus(value = HttpStatus.INTERNAL_SERVER_ERROR)
+	public String handleUnexpectedServerError(HttpServletRequest request, Exception ex) {
 
 		request.setAttribute("ex", ex);
+		return "error";
+	}
 
-		// 根据不同错误转向不同页面
-		if (ex instanceof ParameterException) {
-			return "error-parameter";
-		} else {
-			return "error";
-		}
+	@ExceptionHandler(ParameterException.class)
+	@ResponseStatus(value = HttpStatus.BAD_REQUEST)
+	@ResponseBody
+	public String handleInvalidRequestError(ParameterException ex) {
+		return ex.getMessage();
 	}
 }

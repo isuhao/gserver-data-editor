@@ -9,6 +9,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.validator.constraints.Length;
+
 import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.annotation.ArrayData;
 import com.gserver.data.editor.annotation.Comment;
@@ -26,6 +28,7 @@ public class Talent implements TableEntity , Serializable{
 
 	@Comment(search = "search_LIKE_name", desc = "名称")
 	@Column(name = "name", nullable = false)
+	@Length(min=2,message="{talent.name.illegal}")
 	private String name;
 
 	@Comment(search = "search_EQ_pos", desc = "层数")

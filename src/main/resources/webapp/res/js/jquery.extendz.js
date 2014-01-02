@@ -96,7 +96,7 @@
 			message : "Please input a double."
 		}
 	});
-})(jQuery);
+//})(jQuery);
 
 /**
  * arrays
@@ -108,7 +108,7 @@
  *   messager
  *   tableWindow
  */
-(function($) {
+//(function($) {
 	$.fn.arrayeditor = function(options, param) {
 		if ( typeof options === 'string') {
 			var method = $.fn.arrayeditor.methods[options];
@@ -397,7 +397,7 @@
 		constraintUrl : '../_tt_constraint/find'
 	});
 
-})(jQuery);
+//})(jQuery);
 
 /**
  * edatagrid editor扩展
@@ -407,7 +407,7 @@
  * combobox
  * validType
  */
-(function($) {
+//(function($) {
 	$.extend($.fn.datagrid.defaults.editors, {
 		/**
 		 * validateCombobox
@@ -445,7 +445,9 @@
 					},
 					dataType : 'json',
 					success : function(data) {
-						combodata = data.options;
+						combodata = $.map(data.options, function(e){
+							return {"0": e};
+						});
 						switch (data.dataType) {
 						case "byte":
 						case "Byte":
@@ -493,10 +495,10 @@
 	        	$combobox.appendTo(container);
 	            return $combobox.combobox({
 						data : combodata,
-						valueField : "0",
-						textField : "0",
+						valueField : '0',
+						textField : '0',
 						formatter: function(row){
-	            			return row;
+	            			return row['0'];
 	            		}
 					});
 	        },

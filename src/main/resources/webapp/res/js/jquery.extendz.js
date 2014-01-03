@@ -186,7 +186,7 @@
 						}
 					}(field);
 					if (arrayRule[field] !== undefined) {
-						var colInfo = arrayRule[field][String(keyValue)];
+						var colInfo = arrayRule[field]['' + keyValue];
 						if (colInfo) {
 							for (var i = colInfo.length; i--; ) {
 								var editor;

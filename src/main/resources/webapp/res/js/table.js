@@ -6,7 +6,77 @@ $(function() {
 		destroyUrl : 'delete',
 		onError: function(index, data){
 			if (data.errorMsg) {
-				$.messager.alert('失败', data.errorMsg, 'error');
+				if (typeof data.errorMsg === "string") {
+					$.messager.alert('失败', data.errorMsg, 'error');
+				} else if (typeof data.errorMsg === "object") {
+					for (var a in data.errorMsg) if (data.errorMsg.hasOwnProperty(a)) {
+						function _getWarningTarget(field) {
+							var	index = $('#dg').edatagrid('options').editIndex;
+							var	editor = $('#dg').datagrid('getEditor', {
+									index : index,
+									field : field
+								});
+							var target = null;
+							if (editor) {
+								target = editor.target;
+								if (target.hasClass('datagrid-editable-input')) {
+									//target = $(target[0]);
+								} else if (target.hasClass('combobox-f combo-f')) {
+									target = $($(target).next().children('.combo-text')[0]);
+								}
+							}
+							return target;
+						}
+						var warningTarget = _getWarningTarget(a);
+						var toolMessage = data.errorMsg[a];
+						if (warningTarget) {
+							warningTarget.validatebox({
+			                	prompt: toolMessage,
+				                tipOptions: {    // the options to create tooltip
+				                    showEvent: 'mouseenter',
+				                    hideEvent: 'mouseleave',
+				                    showDelay: 0,
+				                    hideDelay: 0,
+				                    zIndex: '',
+				                    onShow: function(){
+				                    	var $t = $(this);
+				                    	var _initCss = function () {
+				                    		$t.tooltip('tip').css({
+				                    			color: '#000',
+				                    			borderColor: '#CC9933',
+				                    			backgroundColor: '#FFFFCC'
+				                    		});
+				                    		_initCss = undefined;
+				                    	}
+				                    	if (_initCss) _initCss();
+				                    	var validateboxOpts = $t.validatebox('options');
+				                    	if (validateboxOpts.prompt) {
+				                    		$t.tooltip('update', validateboxOpts.prompt);
+				                    	} else {
+				                    		if (validateboxOpts.required && !('' + $t.val())) {
+				                    			$t.tooltip('update', validateboxOpts.missingMessage);
+				                    		} else {
+				                    			if (!$t.hasClass('validatebox-invalid')) {
+				                    				$t.tooltip('tip').hide();
+				                    			} else {
+				                    				$t.tooltip('update', validateboxOpts.invalidMessage || validateboxOpts.rules[validateboxOpts.validType].message);
+				                    			}
+				                    		}
+				                    	}
+				                    }
+				                }
+				            });
+							warningTarget.addClass('validatebox-invalid');
+							var bindFunction = function(){
+		                    	delete $(this).validatebox('options').tipOptions.prompt;
+		                    	delete $(this).validatebox('options').prompt;
+								$(this).removeClass('validatebox-invalid');
+								$(this).unbind('click', bindFunction);
+							};
+							warningTarget.bind('click', bindFunction);
+						}
+					}
+				}
 			} else {
 				$.messager.alert('失败', "服务器返回了错误的结果，请刷新数据！", 'error');
 			}

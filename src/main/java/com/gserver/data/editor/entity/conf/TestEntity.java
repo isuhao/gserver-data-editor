@@ -8,6 +8,9 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Max;
+
+import org.hibernate.validator.constraints.NotEmpty;
 
 import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.annotation.ArrayData;
@@ -34,6 +37,7 @@ public class TestEntity implements TableEntity , Serializable{
 
 	@Comment(search = "search_EQ_jint",desc = "jint")
 	@Column(name = "jint", nullable = true)
+	@Max(value = 256, message = "{_tt_alltypes.jint.illegal}")
 	private int jint;
 
 	@Comment(search = "search_EQ_jlong",desc = "jlong")
@@ -50,6 +54,7 @@ public class TestEntity implements TableEntity , Serializable{
 	
 	@Comment(search = "search_LIKE_jstring",desc = "jstring")
 	@Column(name = "jstring", nullable = true)
+	@NotEmpty(message = "{_tt_alltypes.jstring.illegal}")
 	private String jstring;
 	
 	@Comment(search = "search_LIKE_jstringarray",desc = "jstringarray")

@@ -10,6 +10,7 @@ import java.util.zip.ZipOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -22,10 +23,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.gserver.common.repository.MissionRepository2;
 import com.gserver.data.editor.TableEntity;
+import com.gserver.data.editor.dto.TableArrayRule;
 import com.gserver.data.editor.dto.TableTitle;
 import com.gserver.data.editor.dto.Tree;
 import com.gserver.data.editor.interceptor.LockTableInterceptor;
@@ -33,6 +37,7 @@ import com.gserver.data.editor.service.TablesService;
 import com.gserver.data.editor.util.BaseQEntity;
 import com.gserver.data.editor.util.ClassUtils;
 import com.gserver.data.editor.util.EntityUtils;
+import com.gserver.data.editor.util.FileToEntityUtils;
 import com.gserver.data.editor.util.ReflectionUtils;
 import com.gserver.data.editor.util.Servlets;
 
@@ -41,6 +46,8 @@ public class EditorController {
 
 	@Autowired
 	TablesService tablesService;
+	@Autowired
+	MissionRepository2 missionRepository2;
 
 	/**
 	 * 首页跳转
@@ -49,6 +56,7 @@ public class EditorController {
 	 */
 	@RequestMapping(value = "/", method = RequestMethod.GET)
 	public String index() {
+		
 		return "index";
 	}
 
@@ -326,5 +334,52 @@ public class EditorController {
 		}
 		out.flush();
 		out.close();
+	}
+	
+
+	@ResponseBody
+	@RequestMapping(value = "/upload", method = { RequestMethod.POST })
+	public Map<String, Object> upload(@RequestParam("file") MultipartFile file) {
+		Map<String, Object> map = Maps.newHashMap();
+		try {
+			if (file.isEmpty()) {
+				map.put("msg", "文件无效！");
+			} else {
+				String tableName = file.getOriginalFilename().replaceAll(".txt", "");
+
+				Class<TableEntity> mappedClass = EntityUtils.getMappedClass(tableName);
+
+				List<TableEntity> resolve = FileToEntityUtils.resolve(mappedClass, file.getInputStream());
+
+				List<TableArrayRule> tableArrayRules = tablesService.getTableArrayRule(tableName);
+				for (TableEntity tableEntity : resolve) {
+
+					for (TableArrayRule rule : tableArrayRules) {
+						Object fieldValue = ReflectionUtils.getFieldValue(tableEntity, rule.getKeyField());
+						String keyValue = rule.getKeyValue();
+						if (String.valueOf(fieldValue).equals(keyValue)) {
+							Object fieldValue2 = ReflectionUtils.getFieldValue(tableEntity, rule.getTargetField());
+							int keyValueNum = rule.getKeyValueNum().intValue();
+							int length = StringUtils.split(fieldValue2.toString(), ',').length;
+							if (keyValueNum % length != 0) {
+								map.put("msg", tableName + "中code为" + tableEntity.getCode() + "的" + rule.getTargetField() + "字段有问题,请检查");
+								return map;
+							} else {
+								break;
+							}
+						}
+					}
+
+					tablesService.updateData(tableEntity);
+				}
+				map.put("successed", true);
+				map.put("msg", file.getOriginalFilename() + "已上传到服务器");
+
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			map.put("msg", "生成文件失败！" + e);
+		}
+		return map;
 	}
 }

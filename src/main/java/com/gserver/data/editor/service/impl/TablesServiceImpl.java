@@ -28,6 +28,7 @@ import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.annotation.ArrayData;
 import com.gserver.data.editor.annotation.Comment;
 import com.gserver.data.editor.dao.TablesDao;
+import com.gserver.data.editor.dto.TableArrayRule;
 import com.gserver.data.editor.dto.TableTitle;
 import com.gserver.data.editor.dto.Tree;
 import com.gserver.data.editor.entity.conf.ArrayRule;
@@ -239,5 +240,10 @@ public class TablesServiceImpl implements TablesService {
 	public List<String> getKeyOptions(String tableName, String field) {
 		List<String> list = tablesDao.getAll(ArrayRule.class, Projections.property("keyValue"), Restrictions.eq("tableName", tableName), Restrictions.eq("keyField", field));
 		return list;
+	}
+	
+	public List<TableArrayRule> getTableArrayRule(String table) {
+		List<TableArrayRule> tableArrayRule = tablesDao.getTableArrayRule(table);
+		return tableArrayRule;
 	}
 }

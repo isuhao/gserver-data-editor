@@ -55,6 +55,10 @@ public class EntityUtils {
 					nameToClass.putIfAbsent(tableName, claz);
 					return claz;
 				}
+				if (claz.getSimpleName().equals(tableName)) {
+					nameToClass.putIfAbsent(tableName, claz);
+					return claz;
+				}
 			}
 		} catch (IOException e) {
 			// This IOException should never been thrown.

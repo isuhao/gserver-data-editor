@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.gserver.data.editor.TableEntity;
+import com.gserver.data.editor.dto.TableArrayRule;
 import com.gserver.data.editor.dto.TableTitle;
 import com.gserver.data.editor.dto.Tree;
 import com.gserver.data.editor.util.BaseQEntity;
@@ -99,5 +100,6 @@ public interface TablesService {
 	 * @return
 	 */
 	public List<TableTitle> getSimpleTitles(String table);
-
+	
+	public List<TableArrayRule> getTableArrayRule(String table);
 }

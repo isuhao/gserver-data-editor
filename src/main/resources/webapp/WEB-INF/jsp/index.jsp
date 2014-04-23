@@ -43,7 +43,8 @@
 		</div>
 	</div>
 	<div id="treeMenu" class="easyui-menu" style="width:120px;">
-        <div id="exportInMenu">导出</div>
+        <div id="exportMenu">导出</div>
+        <div id="importMenu">导入</div>
     </div>
 </body>
 </html>

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Repository;
 
 import com.gserver.data.editor.TableEntity;
 import com.gserver.data.editor.dao.TablesDao;
+import com.gserver.data.editor.dto.TableArrayRule;
 
 @Repository
 public class TablesDaoImpl extends BaseDaoImpl implements TablesDao {
@@ -69,4 +70,12 @@ public class TablesDaoImpl extends BaseDaoImpl implements TablesDao {
 		return singleResult.longValue();
 	}
 
+	@SuppressWarnings("unchecked")
+	public List<TableArrayRule> getTableArrayRule(String table) {
+		Query createQuery = em
+				.createQuery("SELECT new com.gserver.data.editor.dto.TableArrayRule(  tableName,  keyField,  keyValue,  targetField,  COUNT(keyValue) as keyValueNum) FROM ArrayRule  GROUP BY keyValue ,targetField HAVING tableName=:tableName");
+		createQuery.setParameter("tableName", table);
+		List<TableArrayRule> resultList = createQuery.getResultList();
+		return resultList;
+	}
 }

@@ -6,6 +6,7 @@ import java.util.List;
 
 import javax.persistence.Query;
 
+import org.apache.commons.lang3.StringUtils;
 import org.hibernate.Criteria;
 import org.hibernate.criterion.Criterion;
 import org.hibernate.criterion.Projection;
@@ -64,7 +65,7 @@ public class TablesDaoImpl extends BaseDaoImpl implements TablesDao {
 	}
 
 	public long count(Class<TableEntity> clazz, Field field) {
-		String sql = "SELECT MAX(LENGTH(" + field.getName() + ")-LENGTH(REPLACE(" + field.getName() + ",',',''))+1) FROM " + clazz.getSimpleName();
+		String sql = "SELECT MAX(LENGTH(" + field.getName() + ")-LENGTH(REPLACE(" + field.getName() + ",',',''))+1) FROM " + StringUtils.lowerCase(clazz.getSimpleName());
 		Query q = em.createNativeQuery(sql);
 		BigInteger singleResult = (BigInteger) q.getSingleResult();
 		return singleResult.longValue();
